@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
-import type { Layout } from 'react-grid-layout';
+import type { LayoutItem } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -17,7 +17,7 @@ import styles from './Dashboard.module.css';
 
 const STORAGE_KEY = 'orion-dashboard-layout-v1';
 
-const DEFAULT_LAYOUT: Layout[] = [
+const DEFAULT_LAYOUT: LayoutItem[] = [
   { i: 'stat-0',      x: 0,  y: 0,  w: 2, h: 3,  minW: 2, minH: 2  },
   { i: 'stat-1',      x: 2,  y: 0,  w: 2, h: 3,  minW: 2, minH: 2  },
   { i: 'stat-2',      x: 4,  y: 0,  w: 2, h: 3,  minW: 2, minH: 2  },
@@ -32,11 +32,11 @@ const DEFAULT_LAYOUT: Layout[] = [
   { i: 'alertsPanel', x: 10, y: 10, w: 2, h: 8,  minW: 2, minH: 4  },
 ];
 
-function getSavedLayout(): Layout[] {
+function getSavedLayout(): LayoutItem[] {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (!saved) return DEFAULT_LAYOUT;
-    const parsed = JSON.parse(saved) as Layout[];
+    const parsed = JSON.parse(saved) as LayoutItem[];
     // merge with defaults to pick up any new widgets
     const ids = new Set(parsed.map(l => l.i));
     const missing = DEFAULT_LAYOUT.filter(l => !ids.has(l.i));
@@ -52,9 +52,9 @@ const SPARK_STOR = [40, 41, 42, 41, 43, 44, 43, 45, 44, 46, 45, 47];
 const SPARK_PW   = [82, 84, 83, 85, 86, 84, 87, 85, 88, 86, 89, 87];
 
 export function Dashboard() {
-  const [layout, setLayout] = useState<Layout[]>(getSavedLayout);
+  const [layout, setLayout] = useState<LayoutItem[]>(getSavedLayout);
 
-  const handleLayoutChange = useCallback((newLayout: Layout[]) => {
+  const handleLayoutChange = useCallback((newLayout: LayoutItem[]) => {
     setLayout(newLayout);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newLayout));
   }, []);

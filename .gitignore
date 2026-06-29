@@ -29,3 +29,6 @@ storybook-static
 # Claude / Playwright MCP artifacts
 .playwright-mcp/
 .claude/
+
+# Let Vercel/CI resolve deps fresh (avoids cross-platform lock file issues)
+package-lock.json

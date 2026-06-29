@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
-import type { LayoutItem } from 'react-grid-layout';
+import type { Layout, LayoutItem } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -54,8 +54,8 @@ const SPARK_PW   = [82, 84, 83, 85, 86, 84, 87, 85, 88, 86, 89, 87];
 export function Dashboard() {
   const [layout, setLayout] = useState<LayoutItem[]>(getSavedLayout);
 
-  const handleLayoutChange = useCallback((newLayout: LayoutItem[]) => {
-    setLayout(newLayout);
+  const handleLayoutChange = useCallback((newLayout: Layout) => {
+    setLayout([...newLayout]);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newLayout));
   }, []);
 

@@ -1,0 +1,85 @@
+.widget {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.widget::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--teal-700) 40%, var(--teal-600) 70%, transparent 100%);
+  opacity: 0.5;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+.legend { display: flex; gap: 16px; }
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+}
+
+.legendDot { width: 6px; height: 6px; border-radius: 50%; }
+
+.chart { height: 200px; }
+
+/* Tooltip */
+.tooltip {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-mid);
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  box-shadow: var(--teal-glow-md);
+}
+
+.tooltipTime {
+  color: var(--text-dim);
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.tooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0;
+}
+
+.tooltipDot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.tooltipKey { color: var(--text-secondary); flex: 1; font-size: 10px; }
+.tooltipVal { color: var(--text-primary); font-weight: 700; font-size: 11px; }

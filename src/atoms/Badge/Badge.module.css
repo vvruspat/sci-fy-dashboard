@@ -1,0 +1,45 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid;
+  clip-path: polygon(0 3px, 3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px));
+}
+
+/* All variants now use teal family — only red for danger */
+.cyan   { background: var(--teal-fill); border-color: var(--teal-700); color: var(--teal-300); }
+.purple { background: var(--teal-fill); border-color: var(--teal-800); color: var(--teal-400); }
+.amber  { background: var(--amber-fill); border-color: rgba(232,160,84,0.3); color: var(--amber-400); }
+.green  { background: var(--teal-fill); border-color: var(--teal-600); color: var(--teal-300); }
+.red    { background: var(--red-fill); border-color: rgba(255,61,79,0.3); color: var(--red-400); }
+.dim    { background: rgba(255,255,255,0.03); border-color: var(--border-dim); color: var(--text-dim); }
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+.dot_cyan, .dot_purple, .dot_green {
+  background: var(--teal-300);
+  box-shadow: 0 0 5px var(--teal-300);
+  animation: pulseGlow 2.5s ease infinite;
+}
+.dot_amber {
+  background: var(--amber-400);
+  box-shadow: 0 0 5px var(--amber-400);
+  animation: pulseGlow 2.5s ease infinite;
+}
+.dot_red {
+  background: var(--red-500);
+  box-shadow: 0 0 5px var(--red-500);
+  animation: blinkSoft 1s ease infinite;
+}
+.dot_dim { background: var(--text-muted); }
+
+@keyframes pulseGlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+@keyframes blinkSoft { 0%, 100% { opacity: 1; } 50% { opacity: 0.1; } }

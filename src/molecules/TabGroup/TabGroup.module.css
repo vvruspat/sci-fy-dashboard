@@ -1,0 +1,63 @@
+.group {
+  display: flex;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  margin-bottom: -1px;
+}
+
+.tab:hover { color: var(--text-secondary); }
+
+.tab.active {
+  color: var(--teal-300);
+  border-bottom-color: var(--teal-400);
+}
+
+/* Glow under active tab */
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 20%;
+  right: 20%;
+  height: 1px;
+  background: var(--teal-300);
+  filter: blur(3px);
+}
+
+.icon { display: flex; align-items: center; }
+.icon svg { width: 11px; height: 11px; }
+
+.badge {
+  background: var(--bg-hover);
+  border: 1px solid var(--border-dim);
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 2px;
+  min-width: 16px;
+  text-align: center;
+}
+.badgeActive {
+  background: var(--teal-fill);
+  border-color: var(--teal-800);
+  color: var(--teal-300);
+}

@@ -1,0 +1,73 @@
+.wrapper { display: flex; flex-direction: column; gap: 4px; }
+
+.meta { display: flex; justify-content: space-between; align-items: center; }
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+}
+.value.cyan,
+.value.purple,
+.value.green { color: var(--teal-300); }
+.value.amber  { color: var(--amber-400); }
+.value.red    { color: var(--red-400); }
+
+.track {
+  width: 100%;
+  background: rgba(0,232,187,0.04);
+  border: 1px solid var(--border-dim);
+  overflow: hidden;
+  position: relative;
+}
+
+.sm { height: 2px; }
+.md { height: 4px; }
+.lg { height: 7px; }
+
+.fill {
+  height: 100%;
+  transition: width 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  position: relative;
+}
+
+/* All progress uses the teal gradient family */
+.fill.cyan,
+.fill.purple,
+.fill.green {
+  background: linear-gradient(90deg, var(--teal-900), var(--teal-400));
+}
+.fill.amber {
+  background: linear-gradient(90deg, rgba(232,160,84,0.3), var(--amber-400));
+}
+.fill.red {
+  background: linear-gradient(90deg, rgba(255,61,79,0.3), var(--red-400));
+}
+
+/* Shimmer on top of fill */
+.shimmer {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 30px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,232,187,0.4), transparent);
+  animation: shimmerAnim 2.5s ease infinite;
+}
+
+@keyframes shimmerAnim { 0% { left: -30px; } 100% { left: calc(100% + 30px); } }

@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+
+/* ════════════════════════════════════════════════════════
+   THEME ENGINE — change ONE value to shift the whole app
+   ════════════════════════════════════════════════════════ */
+:root {
+  /* ┌─ SINGLE SOURCE OF TRUTH ─────────────────────────┐ */
+  --hue: 185;          /* 0-360 — change this to repaint everything  */
+  --sat: 85%;          /* accent saturation                          */
+  --sat-bg: 88%;       /* background saturation (slightly higher)    */
+  /* └───────────────────────────────────────────────────┘ */
+
+  /* ─── Backgrounds ─── */
+  --bg-void:   hsl(var(--hue) var(--sat-bg) 3%);   /* solid — page root        */
+  --bg-deep:   hsl(var(--hue) var(--sat-bg) 4.5%); /* solid — sidebar/topbar   */
+  --bg-space:  hsl(var(--hue) 82% 6%);
+  --bg-panel:  hsla(var(--hue) 78% 7.5% / 0.22);   /* glass — panels           */
+  --bg-card:   hsla(var(--hue) 75% 9% / 0.12);     /* glass — cards & widgets  */
+  --bg-hover:  hsla(var(--hue) 72% 11% / 0.18);
+  --bg-active: hsla(var(--hue) 70% 13.5% / 0.26);
+
+  /* ─── Accent scale (derived from --hue) ─── */
+  --teal-950: hsl(var(--hue) 80% 5%);
+  --teal-900: hsl(var(--hue) 78% 9%);
+  --teal-800: hsl(var(--hue) 76% 15%);
+  --teal-700: hsl(var(--hue) 74% 22%);
+  --teal-600: hsl(var(--hue) 72% 29%);
+  --teal-500: hsl(var(--hue) var(--sat) 36%);
+  --teal-400: hsl(var(--hue) var(--sat) 42%);
+  --teal-300: hsl(var(--hue) 100% 43%);   /* ← primary accent */
+  --teal-200: hsl(var(--hue) 90% 62%);
+  --teal-100: hsl(var(--hue) 80% 82%);
+
+  /* ─── Semantic fills ─── */
+  --teal-fill:      hsla(var(--hue) 80% 50% / 0.08);
+  --teal-fill-mid:  hsla(var(--hue) 80% 50% / 0.14);
+  --teal-fill-high: hsla(var(--hue) 80% 50% / 0.22);
+
+  /* ─── Glows ─── */
+  --teal-glow-sm:  0 0 12px hsla(var(--hue) 90% 50% / 0.22);
+  --teal-glow-md:  0 0 30px hsla(var(--hue) 90% 50% / 0.15),
+                   0 0 60px hsla(var(--hue) 80% 45% / 0.06);
+  --teal-glow-lg:  0 0 60px hsla(var(--hue) 90% 50% / 0.14),
+                   0 0 120px hsla(var(--hue) 75% 42% / 0.06);
+
+  /* ─── Text ─── (fixed contrast levels, themed hue) */
+  --text-primary:   hsl(var(--hue) 60% 90%);   /* ~#b8eef8 */
+  --text-secondary: hsl(var(--hue) 45% 60%);   /* readable secondary */
+  --text-dim:       hsl(var(--hue) 38% 42%);   /* labels, captions — was too dark */
+  --text-muted:     hsl(var(--hue) 32% 28%);   /* section headers, hints */
+  --text-accent:    var(--teal-300);
+
+  /* ─── Borders ─── */
+  --border-dim:    hsla(var(--hue) 80% 50% / 0.07);
+  --border-subtle: hsla(var(--hue) 80% 50% / 0.13);
+  --border-mid:    hsla(var(--hue) 80% 50% / 0.24);
+  --border-bright: hsla(var(--hue) 80% 50% / 0.52);
+
+  /* ─── Danger — NOT theme-sensitive (always red) ─── */
+  --red-500:  hsl(352 100% 62%);
+  --red-400:  hsl(352 100% 69%);
+  --red-glow: 0 0 20px hsla(352 100% 62% / 0.25);
+  --red-fill: hsla(352 100% 62% / 0.08);
+
+  /* ─── Warning — NOT theme-sensitive (always amber) ─── */
+  --amber-500: hsl(30 78% 62%);
+  --amber-400: hsl(30 80% 69%);
+  --amber-fill: hsla(30 78% 62% / 0.08);
+
+  /* ─── Typography ─── */
+  --font-display: 'Orbitron', monospace;
+  --font-mono:    'Share Tech Mono', monospace;
+  --font-body:    'Exo 2', sans-serif;
+
+  /* ─── Layout ─── */
+  --sidebar-width: 220px;
+  --topbar-height: 60px;
+
+  /* ─── Shadows ─── */
+  --shadow-panel: 0 4px 32px rgba(0,0,0,0.7),
+                  inset 0 1px 0 hsla(var(--hue) 80% 50% / 0.04);
+  --shadow-card:  0 2px 16px rgba(0,0,0,0.5);
+
+  /* ─── Transitions ─── */
+  --transition-fast: 140ms ease;
+  --transition-base: 260ms ease;
+  --transition-slow: 420ms ease;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  font-family: var(--font-body);
+  /* ambient light sources baked into page bg */
+  background:
+    radial-gradient(ellipse 70% 50% at 68% 8%,  hsla(var(--hue) 80% 45% / 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 35% at 12% 75%,  hsla(var(--hue) 80% 40% / 0.07) 0%, transparent 45%),
+    radial-gradient(ellipse 30% 25% at 85% 88%,  hsla(var(--hue) 75% 35% / 0.05) 0%, transparent 40%),
+    hsl(var(--hue) var(--sat-bg) 3%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb { background: var(--teal-800); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--teal-600); }
+
+/* Background grid with intersection dots */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    /* intersection dots */
+    radial-gradient(circle, hsla(var(--hue) 80% 60% / 0.18) 1px, transparent 1px),
+    /* horizontal lines */
+    linear-gradient(hsla(var(--hue) 80% 50% / 0.045) 1px, transparent 1px),
+    /* vertical lines */
+    linear-gradient(90deg, hsla(var(--hue) 80% 50% / 0.045) 1px, transparent 1px);
+  background-size: 60px 60px, 60px 60px, 60px 60px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scan lines — very faint */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(0, 0, 0, 0.025) 3px, rgba(0, 0, 0, 0.025) 6px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+#root { position: relative; z-index: 1; }
+
+/* ─── Glassmorphism utility ─────────────────────────────────────────────────
+   Add class="glass-panel" to any widget/card root for the glass effect.
+   Requires parent background to be partially transparent (bg-card is hsla).
+   ─────────────────────────────────────────────────────────────────────────── */
+.glass-panel {
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  /* outer depth + inset glow shimmer */
+  box-shadow:
+    inset 0 1px 0 hsla(var(--hue) 80% 70% / 0.10),
+    inset 0 0 80px hsla(var(--hue) 80% 50% / 0.04),
+    0 8px 40px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+  position: relative;
+}
+
+/* inward gradient glow overlay — layered via pseudo-element so it doesn't
+   conflict with the module's background property */
+.glass-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    hsla(var(--hue) 80% 65% / 0.08) 0%,
+    hsla(var(--hue) 80% 50% / 0.02) 35%,
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ensure children render above the glow overlay */
+.glass-panel > * { position: relative; z-index: 1; }
+
+/* ─── Drag handle — applied to widget header areas ─── */
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+}
+.drag-handle:active { cursor: grabbing; }
+
+/* ─── Keyframes ─── */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+@keyframes blinkSoft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes fadeInUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes slideLeft {
+  from { transform: translateX(-12px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes rippleOut {
+  0% { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@keyframes barPulse {
+  from { height: 15%; }
+  to { height: 95%; }
+}
+@keyframes shimmer {
+  0% { left: -60px; }
+  100% { left: 100%; }
+}

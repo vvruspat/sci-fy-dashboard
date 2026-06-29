@@ -1,0 +1,87 @@
+.dashboard {
+  padding: 20px;
+  min-height: calc(100vh - var(--topbar-height));
+  position: relative;
+}
+
+/* Reset layout button */
+.resetBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  backdrop-filter: blur(8px);
+}
+.resetBtn:hover {
+  color: var(--teal-300);
+  border-color: var(--border-subtle);
+  background: var(--bg-hover);
+}
+
+/* Grid container */
+.grid {
+  /* react-grid-layout manages sizing */
+}
+
+/* Each grid cell — fill 100% so organism widget can grow */
+.gridItem {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make direct child widget fill the full cell height */
+.gridItem > * {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+/* react-grid-layout placeholder (ghost during drag) */
+:global(.react-grid-item.react-grid-placeholder) {
+  background: hsla(var(--hue) 80% 50% / 0.06) !important;
+  border: 1px dashed hsla(var(--hue) 80% 60% / 0.3) !important;
+  border-radius: 8px;
+  opacity: 1 !important;
+}
+
+/* Resize handle */
+:global(.react-resizable-handle) {
+  width: 14px !important;
+  height: 14px !important;
+  bottom: 3px !important;
+  right: 3px !important;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+:global(.react-grid-item:hover .react-resizable-handle) {
+  opacity: 1;
+}
+:global(.react-resizable-handle::after) {
+  border-color: var(--teal-600) !important;
+  border-width: 1px 1px 0 0 !important;
+  width: 7px !important;
+  height: 7px !important;
+  bottom: 1px !important;
+  right: 1px !important;
+}
+
+/* Drag cursor on widget while dragging */
+:global(.react-grid-item.react-draggable-dragging) {
+  opacity: 0.92;
+  z-index: 999;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7) !important;
+}

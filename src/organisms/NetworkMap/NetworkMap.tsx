@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { theme } from '../../theme';
+import { WidgetPanel } from '../../molecules/WidgetPanel';
+import { ChartLegend } from '../../molecules/ChartLegend';
 import styles from './NetworkMap.module.css';
 
 interface Node {
@@ -77,12 +79,7 @@ export function NetworkMap() {
   }, []);
 
   return (
-    <div className={`${styles.widget} glass-panel`}>
-      <div className={`${styles.header} drag-handle`}>
-        <div className={styles.title}>Network Topology</div>
-        <div className={styles.subtitle}>Live traffic visualization</div>
-      </div>
-
+    <WidgetPanel title="Network Topology" subtitle="Live traffic visualization" className={styles.widget}>
       <div className={styles.mapWrap}>
         <svg viewBox="0 0 100 100" className={styles.svg} preserveAspectRatio="xMidYMid meet">
           <defs>
@@ -201,12 +198,15 @@ export function NetworkMap() {
         </svg>
 
         {/* Legend */}
-        <div className={styles.legend}>
-          <div className={styles.legendItem}><span style={{ color: theme.accent }}>■</span> Low BW</div>
-          <div className={styles.legendItem}><span style={{ color: theme.warning }}>■</span> High BW</div>
-          <div className={styles.legendItem}><span style={{ color: theme.danger }}>■</span> Saturated</div>
-        </div>
+        <ChartLegend
+          className={styles.legend}
+          items={[
+            { color: theme.accent,  label: 'Low BW'    },
+            { color: theme.warning, label: 'High BW'   },
+            { color: theme.danger,  label: 'Saturated' },
+          ]}
+        />
       </div>
-    </div>
+    </WidgetPanel>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ProgressBar } from '../../atoms/ProgressBar';
 import { Indicator } from '../../atoms/Indicator';
 import { Badge } from '../../atoms/Badge';
+import { WidgetPanel } from '../../molecules/WidgetPanel';
 import styles from './ServerRack.module.css';
 
 interface ServerUnit {
@@ -56,29 +57,30 @@ export function ServerRack({ rackId = 'RACK-A', title = 'Server Rack — Alpha' 
 
   const selectedServer = liveData.find(s => s.id === selected);
 
-  return (
-    <div className={`${styles.widget} glass-panel`}>
-      <div className={`${styles.header} drag-handle`}>
-        <div>
-          <div className={styles.title}>{title}</div>
-          <div className={styles.subtitle}>{rackId} · 42U · Tier III</div>
-        </div>
-        <div className={styles.headerStats}>
-          <div className={styles.headerStat}>
-            <span className={styles.headerStatVal} style={{ color: 'var(--teal-300)' }}>
-              {liveData.filter(s => s.status === 'online').length}/{liveData.filter(s => s.type !== 'empty').length}
-            </span>
-            <span className={styles.headerStatLabel}>Online</span>
-          </div>
-          <div className={styles.headerStat}>
-            <span className={styles.headerStatVal} style={{ color: 'var(--amber-400)' }}>
-              {Math.round(liveData.reduce((s, u) => s + u.temp, 0) / liveData.filter(u => u.type !== 'empty').length)}°C
-            </span>
-            <span className={styles.headerStatLabel}>Avg Temp</span>
-          </div>
-        </div>
+  const headerStats = (
+    <div className={styles.headerStats}>
+      <div className={styles.headerStat}>
+        <span className={styles.headerStatVal} style={{ color: 'var(--teal-300)' }}>
+          {liveData.filter(s => s.status === 'online').length}/{liveData.filter(s => s.type !== 'empty').length}
+        </span>
+        <span className={styles.headerStatLabel}>Online</span>
       </div>
+      <div className={styles.headerStat}>
+        <span className={styles.headerStatVal} style={{ color: 'var(--amber-400)' }}>
+          {Math.round(liveData.reduce((s, u) => s + u.temp, 0) / liveData.filter(u => u.type !== 'empty').length)}°C
+        </span>
+        <span className={styles.headerStatLabel}>Avg Temp</span>
+      </div>
+    </div>
+  );
 
+  return (
+    <WidgetPanel
+      title={title}
+      subtitle={`${rackId} · 42U · Tier III`}
+      actions={headerStats}
+      className={styles.widget}
+    >
       <div className={styles.body}>
         {/* 3D Rack Visual */}
         <div className={styles.rackScene}>
@@ -138,7 +140,7 @@ export function ServerRack({ rackId = 'RACK-A', title = 'Server Rack — Alpha' 
           </div>
         )}
       </div>
-    </div>
+    </WidgetPanel>
   );
 }
 

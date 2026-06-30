@@ -1,0 +1,16 @@
+.label {
+  font-family: var(--font-mono);
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+}
+
+/* Size */
+.xs { font-size: 8px; }
+.sm { font-size: 9px; }
+
+/* Color */
+.dim   { color: var(--text-dim); }
+.muted { color: var(--text-muted); }
+
+/* Case */
+.uppercase { text-transform: uppercase; }

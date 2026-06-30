@@ -1,0 +1,23 @@
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top shimmer accent line */
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--shimmer-color, var(--teal-700)) 40%,
+    var(--shimmer-color, var(--teal-600)) 70%,
+    transparent 100%
+  );
+  opacity: 0.5;
+  z-index: 2;
+}

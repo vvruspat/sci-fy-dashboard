@@ -1,0 +1,6 @@
+.subtitle {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  line-height: 1.3;
+}

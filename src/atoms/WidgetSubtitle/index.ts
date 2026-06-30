@@ -1,0 +1,1 @@
+export { WidgetSubtitle } from './WidgetSubtitle';

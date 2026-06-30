@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Alert } from '../../molecules/Alert';
 import { Button } from '../../atoms/Button';
 import { TabGroup } from '../../molecules/TabGroup';
+import { WidgetPanel } from '../../molecules/WidgetPanel';
 import { CheckCheck } from 'lucide-react';
 import styles from './AlertsPanel.module.css';
 
@@ -39,19 +40,15 @@ export function AlertsPanel() {
   const filtered = filter === 'all' ? alerts : alerts.filter(a => a.severity === filter);
 
   return (
-    <div className={`${styles.panel} glass-panel`}>
-      <div className={`${styles.header} drag-handle`}>
-        <div className={styles.title}>System Alerts</div>
-        <Button
-          variant="ghost"
-          size="sm"
-          icon={<CheckCheck size={12} />}
-          onClick={dismissAll}
-        >
+    <WidgetPanel
+      title="System Alerts"
+      actions={
+        <Button variant="ghost" size="sm" icon={<CheckCheck size={12} />} onClick={dismissAll}>
           Clear All
         </Button>
-      </div>
-
+      }
+      className={styles.panel}
+    >
       <TabGroup tabs={TABS} defaultTab="all" onChange={setFilter} />
 
       <div className={styles.list}>
@@ -73,6 +70,6 @@ export function AlertsPanel() {
           ))
         )}
       </div>
-    </div>
+    </WidgetPanel>
   );
 }

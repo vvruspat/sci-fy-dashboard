@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 interface SparklineProps {
   data: number[];
   width?: number;
@@ -6,6 +8,9 @@ interface SparklineProps {
 }
 
 export function Sparkline({ data, width = 80, height = 24, className }: SparklineProps) {
+  const uid = useId();
+  const gradId = `sparkGrad-${uid.replace(/:/g, '')}`;
+
   if (data.length < 2) return null;
 
   const max = Math.max(...data);
@@ -24,12 +29,12 @@ export function Sparkline({ data, width = 80, height = 24, className }: Sparklin
   return (
     <svg width={width} height={height} className={className} style={{ display: 'block' }}>
       <defs>
-        <linearGradient id="sparkGrad" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="currentColor" stopOpacity="0.3" />
           <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <polygon points={area} fill="url(#sparkGrad)" />
+      <polygon points={area} fill={`url(#${gradId})`} />
       <polyline
         points={points}
         fill="none"

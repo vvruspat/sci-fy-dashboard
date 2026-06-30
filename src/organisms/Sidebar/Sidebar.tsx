@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { Indicator } from '../../atoms/Indicator';
 import { Badge } from '../../atoms/Badge';
+import { Avatar } from '../../atoms/Avatar';
 import styles from './Sidebar.module.css';
 
 interface NavItem {
@@ -112,10 +113,7 @@ export function Sidebar() {
           <span>Settings</span>
         </button>
         <div className={styles.userCard}>
-          <div className={styles.avatar}>
-            <span>BC</span>
-            <span className={styles.avatarDot} />
-          </div>
+          <Avatar initials="BC" online size="md" />
           <div className={styles.userInfo}>
             <div className={styles.userName}>Bradley Cooper</div>
             <div className={styles.userRole}>SysAdmin · Earth</div>

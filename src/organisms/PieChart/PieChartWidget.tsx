@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { PieChart, Pie as PieBase, Cell, ResponsiveContainer, Sector } from 'recharts';
 const Pie = PieBase as any;
 import { HUE } from '../../theme';
+import { WidgetPanel } from '../../molecules/WidgetPanel';
 import styles from './PieChartWidget.module.css';
 
 const DATA = [
@@ -62,12 +63,7 @@ export function PieChartWidget({ title = 'Resource Allocation' }: PieChartWidget
   const total = DATA.reduce((s, d) => s + d.value, 0);
 
   return (
-    <div className={`${styles.widget} glass-panel`}>
-      <div className={`${styles.header} drag-handle`}>
-        <div className={styles.title}>{title}</div>
-        <div className={styles.subtitle}>Total: {total} TW allocated</div>
-      </div>
-
+    <WidgetPanel title={title} subtitle={`Total: ${total} TW allocated`} className={styles.widget}>
       <div className={styles.body}>
         <div className={styles.chart}>
           <ResponsiveContainer width="100%" height="100%">
@@ -127,6 +123,6 @@ export function PieChartWidget({ title = 'Resource Allocation' }: PieChartWidget
           ))}
         </div>
       </div>
-    </div>
+    </WidgetPanel>
   );
 }

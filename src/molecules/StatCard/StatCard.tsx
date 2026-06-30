@@ -3,6 +3,7 @@ import { clsx } from 'clsx';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Sparkline } from '../../atoms/Sparkline';
 import { Badge } from '../../atoms/Badge';
+import { GlassPanel } from '../../atoms/GlassPanel';
 import styles from './StatCard.module.css';
 
 interface StatCardProps {
@@ -23,7 +24,7 @@ export function StatCard({ label, value, unit, trend, icon, accent = 'cyan', sub
   const trendVariant = trendDir === 'up' ? 'green' : trendDir === 'down' ? 'red' : 'dim';
 
   return (
-    <div className={clsx(styles.card, styles[accent], 'glass-panel', className)}>
+    <GlassPanel className={clsx(styles.card, styles[accent], className)}>
       <div className={styles.topLine} />
       <div className={styles.header}>
         <span className={styles.label}>{label}</span>
@@ -49,6 +50,6 @@ export function StatCard({ label, value, unit, trend, icon, accent = 'cyan', sub
           </Badge>
         )}
       </div>
-    </div>
+    </GlassPanel>
   );
 }

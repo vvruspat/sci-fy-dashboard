@@ -3,6 +3,8 @@ import {
   ResponsiveContainer, Area, AreaChart, ReferenceLine,
 } from 'recharts';
 import { TabGroup } from '../../molecules/TabGroup';
+import { ChartLegend } from '../../molecules/ChartLegend';
+import { WidgetPanel } from '../../molecules/WidgetPanel';
 import { useState } from 'react';
 import { theme } from '../../theme';
 import styles from './LineChartWidget.module.css';
@@ -66,19 +68,16 @@ export function LineChartWidget({ title = 'Network Traffic' }: LineChartWidgetPr
   const data = DATA[range];
 
   return (
-    <div className={`${styles.widget} glass-panel`}>
-      <div className={`${styles.header} drag-handle`}>
-        <div>
-          <div className={styles.title}>{title}</div>
-          <div className={styles.subtitle}>Bandwidth utilization over time</div>
-        </div>
-        <TabGroup tabs={TABS} defaultTab="1h" onChange={setRange} />
-      </div>
-
-      <div className={styles.legend}>
-        <span className={styles.legendItem}><span className={styles.legendDot} style={{ background: theme.accent }} />Network I/O</span>
-        <span className={styles.legendItem}><span className={styles.legendDot} style={{ background: theme.accentDim }} />CPU Load</span>
-      </div>
+    <WidgetPanel
+      title={title}
+      subtitle="Bandwidth utilization over time"
+      actions={<TabGroup tabs={TABS} defaultTab="1h" onChange={setRange} />}
+      className={styles.widget}
+    >
+      <ChartLegend items={[
+        { color: theme.accent,    label: 'Network I/O' },
+        { color: theme.accentDim, label: 'CPU Load'    },
+      ]} />
 
       <div className={styles.chart}>
         <ResponsiveContainer width="100%" height="100%">
@@ -137,6 +136,6 @@ export function LineChartWidget({ title = 'Network Traffic' }: LineChartWidgetPr
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </WidgetPanel>
   );
 }

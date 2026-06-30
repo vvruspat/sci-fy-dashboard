@@ -1,0 +1,33 @@
+.dot {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid var(--bg-panel);
+}
+
+/* Size */
+.sm { width: 5px; height: 5px; }
+.md { width: 7px; height: 7px; }
+
+/* Color */
+.red {
+  background: var(--red-500);
+  box-shadow: 0 0 6px var(--red-500);
+}
+.teal {
+  background: var(--teal-300);
+  box-shadow: 0 0 6px var(--teal-300);
+}
+.amber {
+  background: var(--amber-500);
+  box-shadow: 0 0 6px var(--amber-500);
+}
+
+/* Pulse animation */
+.pulse {
+  animation: dotPulse 2s ease infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}

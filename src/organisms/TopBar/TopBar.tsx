@@ -3,6 +3,7 @@ import { Search, Bell, RefreshCw, Clock, Wifi } from 'lucide-react';
 import { Input } from '../../atoms/Input';
 import { Badge } from '../../atoms/Badge';
 import { Button } from '../../atoms/Button';
+import { NotificationDot } from '../../atoms/NotificationDot';
 import styles from './TopBar.module.css';
 
 export function TopBar() {
@@ -44,7 +45,7 @@ export function TopBar() {
         <Button variant="ghost" size="sm" icon={<RefreshCw size={12} />} />
         <div className={styles.notifBtn}>
           <Button variant="ghost" size="sm" icon={<Bell size={12} />} />
-          <span className={styles.notifDot} />
+          <NotificationDot color="red" size="sm" pulse className={styles.notifDot} />
         </div>
       </div>
     </header>

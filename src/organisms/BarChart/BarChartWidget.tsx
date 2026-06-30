@@ -2,6 +2,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell,
 } from 'recharts';
+import { WidgetPanel } from '../../molecules/WidgetPanel';
+import { ChartLegend } from '../../molecules/ChartLegend';
 import { theme } from '../../theme';
 import styles from './BarChartWidget.module.css';
 
@@ -62,15 +64,15 @@ interface BarChartWidgetProps {
 
 export function BarChartWidget({ title = 'Rack Load Distribution' }: BarChartWidgetProps) {
   return (
-    <div className={`${styles.widget} glass-panel`}>
-      <div className={`${styles.header} drag-handle`}>
-        <div className={styles.title}>{title}</div>
-        <div className={styles.legend}>
-          <span className={styles.legendItem}><span style={{ color: theme.accent }}>■</span> Normal</span>
-          <span className={styles.legendItem}><span style={{ color: theme.warning }}>■</span> High</span>
-          <span className={styles.legendItem}><span style={{ color: theme.danger }}>■</span> Critical</span>
-        </div>
-      </div>
+    <WidgetPanel
+      title={title}
+      actions={<ChartLegend items={[
+        { color: theme.accent,   label: 'Normal'   },
+        { color: theme.warning,  label: 'High'     },
+        { color: theme.danger,   label: 'Critical' },
+      ]} />}
+      className={styles.widget}
+    >
       <div className={styles.chart}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barCategoryGap="25%">
@@ -97,6 +99,6 @@ export function BarChartWidget({ title = 'Rack Load Distribution' }: BarChartWid
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </WidgetPanel>
   );
 }

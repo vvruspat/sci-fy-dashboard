@@ -101,20 +101,8 @@
 .sparkWrap.amber { color: var(--amber-400); }
 .sparkWrap.red   { color: var(--red-400); }
 
-.spark { display: block; }
-
 .footer { display: flex; justify-content: space-between; align-items: center; }
 
 .sublabel { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); }
 
-.trend {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-}
-.trend_up   { color: var(--teal-300); }
-.trend_down { color: var(--red-400); }
-.trend_flat { color: var(--text-dim); }
+.trendBadge { line-height: 1; }

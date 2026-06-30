@@ -92,6 +92,20 @@
   box-shadow: var(--teal-glow-sm);
 }
 
+/* Bare — borderless icon button */
+.bare {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-muted);
+  padding: 2px;
+  clip-path: none;
+}
+.bare:hover:not(:disabled) {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text-secondary);
+}
+
 .btn:disabled { opacity: 0.3; cursor: not-allowed; }
 .glow { box-shadow: var(--teal-glow-sm); }
 

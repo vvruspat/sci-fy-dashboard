@@ -1,5 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { clsx } from 'clsx';
+import { Badge } from '../../atoms/Badge';
 import styles from './TabGroup.module.css';
 
 interface Tab {
@@ -35,9 +36,7 @@ export function TabGroup({ tabs, defaultTab, onChange, className }: TabGroupProp
           {tab.icon && <span className={styles.icon}>{tab.icon}</span>}
           <span className={styles.label}>{tab.label}</span>
           {tab.badge !== undefined && (
-            <span className={clsx(styles.badge, active === tab.id && styles.badgeActive)}>
-              {tab.badge}
-            </span>
+            <Badge variant={active === tab.id ? 'cyan' : 'dim'}>{tab.badge}</Badge>
           )}
         </button>
       ))}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert } from '../../atoms/Alert';
+import { Alert } from '../../molecules/Alert';
 import { Button } from '../../atoms/Button';
 import { TabGroup } from '../../molecules/TabGroup';
 import { CheckCheck } from 'lucide-react';

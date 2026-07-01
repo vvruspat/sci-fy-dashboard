@@ -13,6 +13,7 @@ import { PieChartWidget } from '../../organisms/PieChart';
 import { ServerRack } from '../../organisms/ServerRack';
 import { AlertsPanel } from '../../organisms/AlertsPanel';
 import { NetworkMap } from '../../organisms/NetworkMap';
+import { GlobeWidget } from '../../organisms/GlobeWidget';
 import styles from './Dashboard.module.css';
 
 const STORAGE_KEY = 'orion-dashboard-layout-v1';
@@ -30,6 +31,7 @@ const DEFAULT_LAYOUT: LayoutItem[] = [
   { i: 'networkMap',  x: 7,  y: 12, w: 3, h: 6,  minW: 2, minH: 4  },
   { i: 'pieChart',    x: 10, y: 3,  w: 2, h: 7,  minW: 2, minH: 5  },
   { i: 'alertsPanel', x: 10, y: 10, w: 2, h: 8,  minW: 2, minH: 4  },
+  { i: 'globe',       x: 0,  y: 18, w: 12, h: 8,  minW: 6, minH: 6  },
 ];
 
 function getSavedLayout(): LayoutItem[] {
@@ -123,6 +125,7 @@ export function Dashboard() {
         <div key="networkMap"  className={styles.gridItem}><NetworkMap /></div>
         <div key="pieChart"    className={styles.gridItem}><PieChartWidget title="Resource Allocation" /></div>
         <div key="alertsPanel" className={styles.gridItem}><AlertsPanel /></div>
+        <div key="globe"       className={styles.gridItem}><GlobeWidget /></div>
       </Grid>
     </div>
   );

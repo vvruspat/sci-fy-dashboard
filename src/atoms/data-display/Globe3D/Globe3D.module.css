@@ -1,0 +1,39 @@
+.globe {
+  display: block;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  overflow: visible;
+}
+.globe.dragging {
+  cursor: grabbing;
+}
+
+.sphere {
+  fill: none;
+  stroke: var(--border-mid);
+  stroke-width: 1;
+}
+
+.grid path {
+  fill: none;
+  stroke: var(--teal-700);
+  stroke-width: 0.5;
+  opacity: 0.3;
+}
+
+.link {
+  fill: none;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+
+.marker {
+  cursor: pointer;
+}
+
+.markerRing {
+  fill: none;
+  stroke-width: 1;
+  opacity: 0.55;
+}

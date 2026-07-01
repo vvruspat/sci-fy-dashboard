@@ -31,7 +31,7 @@ export function GlassPanel({
 
   return (
     <Tag
-      className={clsx('glass-panel', styles.panel, mode === 'invisible' && styles.invisible, className)}
+      className={clsx(mode === 'invisible' ? styles.invisible : ['glass-panel', styles.panel], className)}
       style={{ ...shimmerVars, ...style }}
     >
       {children}

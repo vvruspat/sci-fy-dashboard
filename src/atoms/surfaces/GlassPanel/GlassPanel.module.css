@@ -6,11 +6,7 @@
 }
 
 .invisible {
-  background: transparent;
-  border-color: transparent;
-}
-.invisible::before {
-  content: none;
+  position: relative;
 }
 
 /* Top shimmer accent line */

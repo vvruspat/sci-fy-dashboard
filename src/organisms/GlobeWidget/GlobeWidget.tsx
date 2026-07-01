@@ -68,7 +68,7 @@ export function GlobeWidget() {
             links={LINKS}
             selectedId={selectedId}
             onSelect={setSelectedId}
-            size={260}
+            size={340}
           />
         </Box>
 

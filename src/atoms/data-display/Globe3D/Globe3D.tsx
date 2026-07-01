@@ -58,7 +58,7 @@ export function Globe3D({
   selectedId,
   onSelect,
   size = 280,
-  autoRotateSpeed = 3.5,
+  autoRotateSpeed = 1.75,
   className,
 }: Globe3DProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -71,7 +71,9 @@ export function Globe3D({
     if (!container) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
+    // Wider FOV than a "natural" lens so the connection arcs (which bulge above the
+    // sphere surface) stay comfortably inside the frustum instead of clipping at the edges.
+    const camera = new THREE.PerspectiveCamera(56, 1, 1, 2000);
     camera.position.set(0, 0, 300);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });

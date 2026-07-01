@@ -1,0 +1,13 @@
+.mark {
+  width: 30px;
+  height: 30px;
+  color: var(--teal-300);
+  animation: floatY 4s ease infinite;
+  filter: drop-shadow(0 0 8px var(--teal-500));
+}
+.mark svg { width: 100%; height: 100%; }
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}

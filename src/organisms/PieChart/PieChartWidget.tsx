@@ -4,7 +4,10 @@ import { PieChart, Pie as PieBase, Cell, ResponsiveContainer, Sector } from 'rec
 const Pie = PieBase as any;
 import { HUE } from '../../theme';
 import { WidgetPanel } from '../../molecules/WidgetPanel';
-import styles from './PieChartWidget.module.css';
+import { Cluster } from '../../atoms/layout/Cluster';
+import { Stack } from '../../atoms/layout/Stack';
+import { Box } from '../../atoms/layout/Box';
+import { LegendMeter } from '../../atoms/data-display/LegendMeter';
 
 const DATA = [
   { name: 'Compute', value: 38, color: `hsl(${HUE} 100% 43%)`, glow: `hsla(${HUE} 100% 43% / 0.4)` },
@@ -63,9 +66,9 @@ export function PieChartWidget({ title = 'Resource Allocation' }: PieChartWidget
   const total = DATA.reduce((s, d) => s + d.value, 0);
 
   return (
-    <WidgetPanel title={title} subtitle={`Total: ${total} TW allocated`} className={styles.widget}>
-      <div className={styles.body}>
-        <div className={styles.chart}>
+    <WidgetPanel title={title} subtitle={`Total: ${total} TW allocated`} gap={14} shimmerColor="var(--teal-600)">
+      <Cluster align="center" gap={14} wrap="nowrap">
+        <Box width={150} height={150} flexShrink={0}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <defs>
@@ -101,28 +104,20 @@ export function PieChartWidget({ title = 'Resource Allocation' }: PieChartWidget
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-        </div>
+        </Box>
 
-        <div className={styles.legend}>
+        <Stack gap={7} minWidth={0} flexGrow={1}>
           {DATA.map((d, i) => (
-            <div
+            <LegendMeter
               key={d.name}
-              className={styles.legendItem}
-              style={{ borderLeftColor: d.color }}
+              color={d.color}
+              name={d.name}
+              value={d.value}
               onMouseEnter={() => setActiveIndex(i)}
-            >
-              <div className={styles.legendDot} style={{ background: d.color, boxShadow: `0 0 6px ${d.color}` }} />
-              <div className={styles.legendBody}>
-                <span className={styles.legendName}>{d.name}</span>
-                <span className={styles.legendVal} style={{ color: d.color }}>{d.value}%</span>
-              </div>
-              <div className={styles.legendBar}>
-                <div className={styles.legendFill} style={{ width: `${d.value}%`, background: d.color }} />
-              </div>
-            </div>
+            />
           ))}
-        </div>
-      </div>
+        </Stack>
+      </Cluster>
     </WidgetPanel>
   );
 }

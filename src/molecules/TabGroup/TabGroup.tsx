@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
-import { clsx } from 'clsx';
 import { Badge } from '../../atoms/feedback/Badge';
-import styles from './TabGroup.module.css';
+import { TabButton, TabButtonIcon } from '../../atoms/feedback/TabButton';
+import { Cluster } from '../../atoms/layout/Cluster';
 
 interface Tab {
   id: string;
@@ -26,20 +26,16 @@ export function TabGroup({ tabs, defaultTab, onChange, className }: TabGroupProp
   };
 
   return (
-    <div className={clsx(styles.group, className)}>
+    <Cluster gap={0} wrap="nowrap" className={className} style={{ borderBottom: '1px solid var(--border-dim)' }}>
       {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          className={clsx(styles.tab, active === tab.id && styles.active)}
-          onClick={() => handleClick(tab.id)}
-        >
-          {tab.icon && <span className={styles.icon}>{tab.icon}</span>}
-          <span className={styles.label}>{tab.label}</span>
+        <TabButton key={tab.id} active={active === tab.id} onClick={() => handleClick(tab.id)}>
+          {tab.icon && <TabButtonIcon>{tab.icon}</TabButtonIcon>}
+          <span>{tab.label}</span>
           {tab.badge !== undefined && (
             <Badge variant={active === tab.id ? 'cyan' : 'dim'}>{tab.badge}</Badge>
           )}
-        </button>
+        </TabButton>
       ))}
-    </div>
+    </Cluster>
   );
 }

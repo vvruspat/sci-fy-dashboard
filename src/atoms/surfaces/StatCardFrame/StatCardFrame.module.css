@@ -1,9 +1,4 @@
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dim);
-  padding: 16px;
-  position: relative;
-  overflow: hidden;
   transition: all var(--transition-base);
   clip-path: polygon(0 6px, 6px 0, calc(100% - 6px) 0, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 0 calc(100% - 6px));
 }
@@ -46,34 +41,6 @@
   background: linear-gradient(90deg, transparent, rgba(0,232,187,0.25), transparent);
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.label {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.13em;
-}
-
-.icon { color: var(--text-muted); display: flex; align-items: center; }
-.icon svg { width: 13px; height: 13px; }
-
-.valueRow {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.valueWrap { display: flex; align-items: baseline; gap: 4px; }
-
 .value {
   font-family: var(--font-display);
   font-size: 26px;
@@ -82,27 +49,19 @@
   letter-spacing: -0.02em;
 }
 /* Teal for positive/neutral metrics */
-.cyan .value, .purple .value, .green .value {
+.value.cyan, .value.purple, .value.green {
   color: var(--teal-300);
   text-shadow: 0 0 24px rgba(0,232,187,0.35);
 }
-.amber .value { color: var(--amber-400); }
-.red .value   { color: var(--red-400); }
-
-.unit {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-dim);
-  margin-bottom: 2px;
-}
+.value.amber { color: var(--amber-400); }
+.value.red   { color: var(--red-400); }
 
 .sparkWrap { flex-shrink: 0; opacity: 0.65; }
 .sparkWrap.cyan, .sparkWrap.purple, .sparkWrap.green { color: var(--teal-400); }
 .sparkWrap.amber { color: var(--amber-400); }
 .sparkWrap.red   { color: var(--red-400); }
 
-.footer { display: flex; justify-content: space-between; align-items: center; }
-
-.sublabel { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); }
-
 .trendBadge { line-height: 1; }
+
+.icon { display: flex; align-items: center; }
+.icon svg { width: 13px; height: 13px; }

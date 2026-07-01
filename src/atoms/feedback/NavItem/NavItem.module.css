@@ -1,0 +1,40 @@
+.navItem {
+  background: transparent;
+  border: none;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.main {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 500;
+}
+.main:hover { color: var(--text-secondary); background: rgba(0,232,187,0.02); }
+
+.main.active {
+  color: var(--teal-300);
+  background: var(--teal-fill);
+}
+.main.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 5px; bottom: 5px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--teal-400), var(--teal-600));
+  box-shadow: 0 0 8px var(--teal-400);
+}
+
+.sub {
+  color: var(--text-muted);
+  font-size: 11px;
+  transition: color var(--transition-fast);
+}
+.sub:hover { color: var(--text-secondary); }
+.sub.active { color: var(--teal-300); }
+
+.icon { display: flex; align-items: center; flex-shrink: 0; }
+.label { flex: 1; }

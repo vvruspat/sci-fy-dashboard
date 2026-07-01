@@ -25,13 +25,15 @@ interface ChartTooltipRowProps {
   value: ReactNode;
   dotColor?: string;
   valueColor?: string;
+  keyColor?: string;
+  gap?: number;
 }
 
-export function ChartTooltipRow({ label, value, dotColor, valueColor }: ChartTooltipRowProps) {
+export function ChartTooltipRow({ label, value, dotColor, valueColor, keyColor, gap = 8 }: ChartTooltipRowProps) {
   return (
-    <div className={styles.row}>
+    <div className={styles.row} style={{ gap }}>
       {dotColor && <span className={styles.dot} style={{ background: dotColor }} />}
-      <span className={styles.key}>{label}</span>
+      <span className={styles.key} style={keyColor ? { color: keyColor } : undefined}>{label}</span>
       <span className={styles.value} style={valueColor ? { color: valueColor } : undefined}>
         {value}
       </span>

@@ -1,10 +1,16 @@
 import { type ReactNode } from 'react';
-import { clsx } from 'clsx';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { Sparkline } from '../../atoms/data-display/Sparkline';
 import { Badge } from '../../atoms/feedback/Badge';
-import { GlassPanel } from '../../atoms/surfaces/GlassPanel';
-import styles from './StatCard.module.css';
+import {
+  StatCardFrame,
+  StatCardValue,
+  StatCardSparkWrap,
+  statCardTrendBadgeClassName,
+  statCardIconClassName,
+} from '../../atoms/surfaces/StatCardFrame';
+import { Box } from '../../atoms/layout/Box';
+import { Cluster } from '../../atoms/layout/Cluster';
 
 interface StatCardProps {
   label: string;
@@ -24,32 +30,58 @@ export function StatCard({ label, value, unit, trend, icon, accent = 'cyan', sub
   const trendVariant = trendDir === 'up' ? 'green' : trendDir === 'down' ? 'red' : 'dim';
 
   return (
-    <GlassPanel className={clsx(styles.card, styles[accent], className)}>
-      <div className={styles.topLine} />
-      <div className={styles.header}>
-        <span className={styles.label}>{label}</span>
-        {icon && <span className={styles.icon}>{icon}</span>}
-      </div>
-      <div className={styles.valueRow}>
-        <div className={styles.valueWrap}>
-          <span className={styles.value}>{typeof value === 'number' ? value.toLocaleString() : value}</span>
-          {unit && <span className={styles.unit}>{unit}</span>}
-        </div>
-        {sparkline && (
-          <div className={clsx(styles.sparkWrap, styles[accent])}>
-            <Sparkline data={sparkline} />
-          </div>
-        )}
-      </div>
-      <div className={styles.footer}>
-        {sublabel && <span className={styles.sublabel}>{sublabel}</span>}
-        {trendDir !== null && (
-          <Badge variant={trendVariant} className={styles.trendBadge}>
-            <TrendIcon size={9} />
-            {Math.abs(trend!).toFixed(1)}%
-          </Badge>
-        )}
-      </div>
-    </GlassPanel>
+    <StatCardFrame accent={accent} className={className}>
+      <Box padding={16}>
+        <Cluster justify="between" marginBottom={10}>
+          <Box
+            as="span"
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 9,
+              color: 'var(--text-dim)',
+              textTransform: 'uppercase',
+              letterSpacing: '0.13em',
+            }}
+          >
+            {label}
+          </Box>
+          {icon && (
+            <Box as="span" className={statCardIconClassName} style={{ color: 'var(--text-muted)' }}>
+              {icon}
+            </Box>
+          )}
+        </Cluster>
+        <Cluster justify="between" align="end" gap={8} marginBottom={8}>
+          <Cluster align="baseline" gap={4}>
+            <StatCardValue accent={accent}>
+              {typeof value === 'number' ? value.toLocaleString() : value}
+            </StatCardValue>
+            {unit && (
+              <Box as="span" style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--text-dim)', marginBottom: 2 }}>
+                {unit}
+              </Box>
+            )}
+          </Cluster>
+          {sparkline && (
+            <StatCardSparkWrap accent={accent}>
+              <Sparkline data={sparkline} />
+            </StatCardSparkWrap>
+          )}
+        </Cluster>
+        <Cluster justify="between">
+          {sublabel && (
+            <Box as="span" style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-muted)' }}>
+              {sublabel}
+            </Box>
+          )}
+          {trendDir !== null && (
+            <Badge variant={trendVariant} className={statCardTrendBadgeClassName}>
+              <TrendIcon size={9} />
+              {Math.abs(trend!).toFixed(1)}%
+            </Badge>
+          )}
+        </Cluster>
+      </Box>
+    </StatCardFrame>
   );
 }

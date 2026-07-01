@@ -5,9 +5,10 @@ import {
 import { TabGroup } from '../../molecules/TabGroup';
 import { ChartLegend } from '../../molecules/ChartLegend';
 import { WidgetPanel } from '../../molecules/WidgetPanel';
+import { ChartTooltip, ChartTooltipRow } from '../../atoms/data-display/ChartTooltip';
+import { Box } from '../../atoms/layout/Box';
 import { useState } from 'react';
 import { theme } from '../../theme';
-import styles from './LineChartWidget.module.css';
 
 const TABS = [
   { id: '1h', label: '1H' },
@@ -35,16 +36,17 @@ const DATA: Record<string, ReturnType<typeof generateData>> = {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className={styles.tooltip}>
-      <div className={styles.tooltipTime}>{label}</div>
+    <ChartTooltip heading={label} headingVariant="time">
       {payload.map((p: any) => (
-        <div key={p.dataKey} className={styles.tooltipRow}>
-          <span className={styles.tooltipDot} style={{ background: p.color }} />
-          <span className={styles.tooltipKey}>{p.dataKey}</span>
-          <span className={styles.tooltipVal}>{p.value.toFixed(1)}%</span>
-        </div>
+        <ChartTooltipRow
+          key={p.dataKey}
+          label={p.dataKey}
+          value={`${p.value.toFixed(1)}%`}
+          dotColor={p.color}
+          gap={6}
+        />
       ))}
-    </div>
+    </ChartTooltip>
   );
 };
 
@@ -72,14 +74,13 @@ export function LineChartWidget({ title = 'Network Traffic' }: LineChartWidgetPr
       title={title}
       subtitle="Bandwidth utilization over time"
       actions={<TabGroup tabs={TABS} defaultTab="1h" onChange={setRange} />}
-      className={styles.widget}
     >
       <ChartLegend items={[
         { color: theme.accent,    label: 'Network I/O' },
         { color: theme.accentDim, label: 'CPU Load'    },
       ]} />
 
-      <div className={styles.chart}>
+      <Box height={200}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
@@ -135,7 +136,7 @@ export function LineChartWidget({ title = 'Network Traffic' }: LineChartWidgetPr
             />
           </AreaChart>
         </ResponsiveContainer>
-      </div>
+      </Box>
     </WidgetPanel>
   );
 }

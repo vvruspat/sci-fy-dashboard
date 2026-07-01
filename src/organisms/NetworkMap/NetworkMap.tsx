@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { theme } from '../../theme';
 import { WidgetPanel } from '../../molecules/WidgetPanel';
 import { ChartLegend } from '../../molecules/ChartLegend';
-import styles from './NetworkMap.module.css';
+import { Box } from '../../atoms/layout/Box';
 
 interface Node {
   id: string;
@@ -79,9 +79,15 @@ export function NetworkMap() {
   }, []);
 
   return (
-    <WidgetPanel title="Network Topology" subtitle="Live traffic visualization" className={styles.widget}>
-      <div className={styles.mapWrap}>
-        <svg viewBox="0 0 100 100" className={styles.svg} preserveAspectRatio="xMidYMid meet">
+    <WidgetPanel title="Network Topology" subtitle="Live traffic visualization" gap={10} shimmerColor="var(--teal-700)">
+      <Box
+        position="relative"
+        style={{
+          background: 'radial-gradient(ellipse at center, rgba(0,200,220,0.015) 0%, transparent 70%)',
+          border: '1px solid var(--border-dim)',
+        }}
+      >
+        <svg viewBox="0 0 100 100" width="100%" height={220} style={{ display: 'block' }} preserveAspectRatio="xMidYMid meet">
           <defs>
             <filter id="nodeGlow">
               <feGaussianBlur stdDeviation="1.5" result="blur" />
@@ -198,15 +204,16 @@ export function NetworkMap() {
         </svg>
 
         {/* Legend */}
-        <ChartLegend
-          className={styles.legend}
-          items={[
-            { color: theme.accent,  label: 'Low BW'    },
-            { color: theme.warning, label: 'High BW'   },
-            { color: theme.danger,  label: 'Saturated' },
-          ]}
-        />
-      </div>
+        <Box position="absolute" bottom={8} right={8}>
+          <ChartLegend
+            items={[
+              { color: theme.accent,  label: 'Low BW'    },
+              { color: theme.warning, label: 'High BW'   },
+              { color: theme.danger,  label: 'Saturated' },
+            ]}
+          />
+        </Box>
+      </Box>
     </WidgetPanel>
   );
 }

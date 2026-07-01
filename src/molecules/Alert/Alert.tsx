@@ -1,8 +1,10 @@
 import { type ReactNode } from 'react';
-import { clsx } from 'clsx';
 import { AlertTriangle, Info, CheckCircle, XCircle, X } from 'lucide-react';
 import { Button } from '../../atoms/form/Button';
-import styles from './Alert.module.css';
+import { AlertBox, AlertBoxIcon, AlertBoxTitle } from '../../atoms/feedback/AlertBox';
+import { Box } from '../../atoms/layout/Box';
+import { Cluster } from '../../atoms/layout/Cluster';
+import { MonoLabel } from '../../atoms/typography/MonoLabel';
 
 export type AlertSeverity = 'info' | 'success' | 'warning' | 'critical';
 
@@ -26,19 +28,27 @@ const ICONS = {
 export function Alert({ severity, title, message, timestamp, onDismiss, className, children }: AlertProps) {
   const Icon = ICONS[severity];
   return (
-    <div className={clsx(styles.alert, styles[severity], className)}>
-      <span className={styles.iconWrap}><Icon size={14} /></span>
-      <div className={styles.body}>
-        <div className={styles.header}>
-          <span className={styles.title}>{title}</span>
-          {timestamp && <span className={styles.ts}>{timestamp}</span>}
-        </div>
-        {message && <p className={styles.message}>{message}</p>}
+    <AlertBox severity={severity} display="flex" align="start" gap={10} paddingX={12} paddingY={10} className={className}>
+      <AlertBoxIcon severity={severity}><Icon size={14} /></AlertBoxIcon>
+      <Box flex="1" minWidth={0}>
+        <Cluster justify="between" gap={8} marginBottom={2}>
+          <AlertBoxTitle severity={severity}>{title}</AlertBoxTitle>
+          {timestamp && (
+            <Box flexShrink={0}>
+              <MonoLabel size="sm" color="dim" uppercase={false}>{timestamp}</MonoLabel>
+            </Box>
+          )}
+        </Cluster>
+        {message && (
+          <Box as="p" style={{ fontSize: 11, color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+            {message}
+          </Box>
+        )}
         {children}
-      </div>
+      </Box>
       {onDismiss && (
         <Button variant="bare" size="sm" icon={<X size={12} />} onClick={onDismiss} aria-label="Dismiss" />
       )}
-    </div>
+    </AlertBox>
   );
 }

@@ -1,0 +1,20 @@
+.surface {
+  background: var(--bg-card);
+  backdrop-filter: blur(32px) saturate(1.6);
+  -webkit-backdrop-filter: blur(32px) saturate(1.6);
+}
+
+.edge {
+  position: absolute;
+  pointer-events: none;
+}
+
+.edge_right {
+  top: 0;
+  right: 0;
+}
+
+.edge_bottom {
+  bottom: 0;
+  left: 0;
+}

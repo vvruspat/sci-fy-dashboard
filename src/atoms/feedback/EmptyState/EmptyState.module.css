@@ -1,0 +1,11 @@
+.empty {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.icon {
+  font-size: 22px;
+  color: var(--teal-300);
+  text-shadow: 0 0 12px var(--teal-300);
+}

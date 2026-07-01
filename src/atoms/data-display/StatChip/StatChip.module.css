@@ -1,0 +1,8 @@
+.stat {
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.value { color: var(--teal-300); font-weight: 700; }
+.label { color: var(--text-muted); font-size: 9px; }

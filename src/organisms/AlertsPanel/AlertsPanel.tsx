@@ -2,9 +2,12 @@ import { useState } from 'react';
 import { Alert } from '../../molecules/Alert';
 import { Button } from '../../atoms/form/Button';
 import { TabGroup } from '../../molecules/TabGroup';
-import { WidgetPanel } from '../../molecules/WidgetPanel';
+import { GlassPanel } from '../../atoms/surfaces/GlassPanel';
+import { WidgetTitle } from '../../atoms/typography/WidgetTitle';
+import { EmptyState } from '../../atoms/feedback/EmptyState';
+import { Box, buildBoxStyle } from '../../atoms/layout/Box';
+import { Stack } from '../../atoms/layout/Stack';
 import { CheckCheck } from 'lucide-react';
-import styles from './AlertsPanel.module.css';
 
 interface AlertItem {
   id: string;
@@ -40,23 +43,23 @@ export function AlertsPanel() {
   const filtered = filter === 'all' ? alerts : alerts.filter(a => a.severity === filter);
 
   return (
-    <WidgetPanel
-      title="System Alerts"
-      actions={
+    <GlassPanel
+      shimmerColor="var(--red-500)"
+      shimmerOpacity={0.35}
+      style={buildBoxStyle({ display: 'flex', direction: 'column', height: '100%' })}
+    >
+      <Box className="drag-handle" display="flex" align="start" justify="between" gap={12} padding={20} paddingBottom={10}>
+        <WidgetTitle>System Alerts</WidgetTitle>
         <Button variant="ghost" size="sm" icon={<CheckCheck size={12} />} onClick={dismissAll}>
           Clear All
         </Button>
-      }
-      className={styles.panel}
-    >
+      </Box>
+
       <TabGroup tabs={TABS} defaultTab="all" onChange={setFilter} />
 
-      <div className={styles.list}>
+      <Stack grow overflowY="auto" gap={2} paddingX={8} paddingY={6}>
         {filtered.length === 0 ? (
-          <div className={styles.empty}>
-            <span className={styles.emptyIcon}>✓</span>
-            <span>No active alerts</span>
-          </div>
+          <EmptyState icon="✓">No active alerts</EmptyState>
         ) : (
           filtered.map(alert => (
             <Alert
@@ -69,7 +72,7 @@ export function AlertsPanel() {
             />
           ))
         )}
-      </div>
-    </WidgetPanel>
+      </Stack>
+    </GlassPanel>
   );
 }

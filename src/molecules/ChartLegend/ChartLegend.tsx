@@ -1,5 +1,5 @@
-import { clsx } from 'clsx';
-import styles from './ChartLegend.module.css';
+import { Cluster } from '../../atoms/layout/Cluster';
+import { Box } from '../../atoms/layout/Box';
 
 export interface ChartLegendItem {
   color: string;
@@ -13,13 +13,18 @@ interface ChartLegendProps {
 
 export function ChartLegend({ items, className }: ChartLegendProps) {
   return (
-    <div className={clsx(styles.legend, className)}>
+    <Cluster gap={12} wrap="nowrap" className={className}>
       {items.map((item) => (
-        <span key={item.label} className={styles.item}>
-          <span className={styles.swatch} style={{ color: item.color }}>■</span>
-          {item.label}
-        </span>
+        <Cluster key={item.label} as="span" gap={4}>
+          <span style={{ lineHeight: 1, color: item.color }}>■</span>
+          <Box
+            as="span"
+            style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--text-dim)' }}
+          >
+            {item.label}
+          </Box>
+        </Cluster>
       ))}
-    </div>
+    </Cluster>
   );
 }

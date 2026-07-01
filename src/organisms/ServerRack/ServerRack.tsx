@@ -2,20 +2,15 @@ import { useState, useEffect } from 'react';
 import { ProgressBar } from '../../atoms/feedback/ProgressBar';
 import { Indicator } from '../../atoms/feedback/Indicator';
 import { Badge } from '../../atoms/feedback/Badge';
+import { MetricRow } from '../../atoms/data-display/MetricRow';
+import { ServerRackScene, type RackServerUnit } from '../../atoms/data-display/ServerRackScene';
 import { WidgetPanel } from '../../molecules/WidgetPanel';
-import styles from './ServerRack.module.css';
+import { Box } from '../../atoms/layout/Box';
+import { Stack } from '../../atoms/layout/Stack';
+import { Cluster } from '../../atoms/layout/Cluster';
+import { Grid } from '../../atoms/layout/Grid';
 
-interface ServerUnit {
-  id: string;
-  name: string;
-  type: 'compute' | 'storage' | 'network' | 'power' | 'empty';
-  status: 'online' | 'offline' | 'warning' | 'critical';
-  cpu: number;
-  temp: number;
-  units: number; // rack units height
-}
-
-const SERVERS: ServerUnit[] = [
+const SERVERS: RackServerUnit[] = [
   { id: 'sw1', name: 'CORE-SW-01', type: 'network', status: 'online', cpu: 12, temp: 35, units: 1 },
   { id: 'fw1', name: 'FW-PRIMARY', type: 'network', status: 'online', cpu: 34, temp: 42, units: 2 },
   { id: 'c1', name: 'COMPUTE-01', type: 'compute', status: 'online', cpu: 87, temp: 68, units: 2 },
@@ -26,7 +21,7 @@ const SERVERS: ServerUnit[] = [
   { id: 'pdu1', name: 'PDU-01', type: 'power', status: 'online', cpu: 0, temp: 28, units: 1 },
 ];
 
-const TYPE_COLOR: Record<ServerUnit['type'], string> = {
+const TYPE_COLOR: Record<RackServerUnit['type'], string> = {
   compute: 'var(--teal-300)',
   storage: 'var(--amber-400)',
   network: 'var(--teal-500)',
@@ -58,20 +53,24 @@ export function ServerRack({ rackId = 'RACK-A', title = 'Server Rack — Alpha' 
   const selectedServer = liveData.find(s => s.id === selected);
 
   const headerStats = (
-    <div className={styles.headerStats}>
-      <div className={styles.headerStat}>
-        <span className={styles.headerStatVal} style={{ color: 'var(--teal-300)' }}>
+    <Cluster gap={20} wrap="nowrap">
+      <Stack gap={1} align="end">
+        <Box as="span" style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: 'var(--teal-300)' }}>
           {liveData.filter(s => s.status === 'online').length}/{liveData.filter(s => s.type !== 'empty').length}
-        </span>
-        <span className={styles.headerStatLabel}>Online</span>
-      </div>
-      <div className={styles.headerStat}>
-        <span className={styles.headerStatVal} style={{ color: 'var(--amber-400)' }}>
+        </Box>
+        <Box as="span" style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--text-dim)', letterSpacing: '0.1em' }}>
+          Online
+        </Box>
+      </Stack>
+      <Stack gap={1} align="end">
+        <Box as="span" style={{ fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 700, color: 'var(--amber-400)' }}>
           {Math.round(liveData.reduce((s, u) => s + u.temp, 0) / liveData.filter(u => u.type !== 'empty').length)}°C
-        </span>
-        <span className={styles.headerStatLabel}>Avg Temp</span>
-      </div>
-    </div>
+        </Box>
+        <Box as="span" style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--text-dim)', letterSpacing: '0.1em' }}>
+          Avg Temp
+        </Box>
+      </Stack>
+    </Cluster>
   );
 
   return (
@@ -79,121 +78,54 @@ export function ServerRack({ rackId = 'RACK-A', title = 'Server Rack — Alpha' 
       title={title}
       subtitle={`${rackId} · 42U · Tier III`}
       actions={headerStats}
-      className={styles.widget}
+      gap={16}
+      shimmerColor="var(--teal-500)"
     >
-      <div className={styles.body}>
+      <Stack gap={14}>
         {/* 3D Rack Visual */}
-        <div className={styles.rackScene}>
-          <div className={styles.rackWrap}>
-            <div className={styles.rack}>
-              <div className={styles.rackTop} />
-              <div className={styles.rackLeft} />
-              <div className={styles.rackRight} />
-              <div className={styles.rackSlots}>
-                {liveData.map((server) => (
-                  <ServerSlot
-                    key={server.id}
-                    server={server}
-                    selected={selected === server.id}
-                    onSelect={() => server.type !== 'empty' && setSelected(server.id)}
-                    typeColor={TYPE_COLOR[server.type]}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <ServerRackScene
+          servers={liveData}
+          selectedId={selected}
+          onSelect={setSelected}
+          typeColor={TYPE_COLOR}
+        />
 
         {/* Detail Panel */}
         {selectedServer && selectedServer.type !== 'empty' && (
-          <div className={styles.detail}>
-            <div className={styles.detailHeader}>
-              <span className={styles.detailName}>{selectedServer.name}</span>
+          <Stack gap={10}>
+            <Box display="flex" align="center" justify="between">
+              <Box
+                as="span"
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: 'var(--teal-300)',
+                  letterSpacing: '0.1em',
+                  textShadow: '0 0 16px rgba(0,200,220,0.3)',
+                }}
+              >
+                {selectedServer.name}
+              </Box>
               <Indicator status={selectedServer.status} size="sm" />
-            </div>
-            <div className={styles.detailType}>
+            </Box>
+            <Box display="flex">
               <Badge variant="cyan">{selectedServer.type}</Badge>
-            </div>
+            </Box>
 
-            <div className={styles.metrics}>
+            <Stack gap={8}>
               <ProgressBar value={selectedServer.cpu} label="CPU Load" size="sm" />
               <ProgressBar value={selectedServer.temp} label="Temperature" variant="amber" size="sm" />
-              <div className={styles.metricGrid}>
-                <div className={styles.metricRow}>
-                  <span className={styles.metricLabel}>Memory</span>
-                  <span className={styles.metricVal} style={{ color: 'var(--teal-300)' }}>64%</span>
-                </div>
-                <div className={styles.metricRow}>
-                  <span className={styles.metricLabel}>Uptime</span>
-                  <span className={styles.metricVal}>47d 12h</span>
-                </div>
-                <div className={styles.metricRow}>
-                  <span className={styles.metricLabel}>IP</span>
-                  <span className={styles.metricVal}>10.0.1.42</span>
-                </div>
-                <div className={styles.metricRow}>
-                  <span className={styles.metricLabel}>Cores</span>
-                  <span className={styles.metricVal}>32 vCPU</span>
-                </div>
-              </div>
-            </div>
-          </div>
+              <Grid columns={2} rowGap={6} columnGap={16}>
+                <MetricRow label="Memory" value="64%" valueColor="var(--teal-300)" />
+                <MetricRow label="Uptime" value="47d 12h" />
+                <MetricRow label="IP" value="10.0.1.42" />
+                <MetricRow label="Cores" value="32 vCPU" />
+              </Grid>
+            </Stack>
+          </Stack>
         )}
-      </div>
+      </Stack>
     </WidgetPanel>
-  );
-}
-
-function ServerSlot({ server, selected, onSelect, typeColor }: {
-  server: ServerUnit;
-  selected: boolean;
-  onSelect: () => void;
-  typeColor: string;
-}) {
-  if (server.type === 'empty') {
-    return <div className={styles.emptySlot} style={{ height: `${server.units * 28}px` }} />;
-  }
-
-  return (
-    <div
-      className={`${styles.serverSlot} ${selected ? styles.serverSelected : ''}`}
-      style={{
-        height: `${server.units * 28}px`,
-        borderLeftColor: typeColor,
-      }}
-      onClick={onSelect}
-    >
-      <div className={styles.slotFront}>
-        {/* LED indicators */}
-        <div className={styles.leds}>
-          <span className={`${styles.led} ${styles[`led_${server.status}`]}`} />
-          <span className={`${styles.led} ${styles.led_hdd}`} />
-          <span className={`${styles.led} ${styles.led_net}`} />
-        </div>
-
-        {/* Name */}
-        <span className={styles.serverName}>{server.name}</span>
-
-        {/* Activity bars */}
-        <div className={styles.activityBars}>
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div
-              key={i}
-              className={styles.actBar}
-              style={{
-                height: `${Math.random() * 100}%`,
-                background: typeColor,
-                animationDelay: `${i * 0.15}s`,
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Temp */}
-        <span className={styles.slotTemp} style={{ color: server.temp > 65 ? 'var(--red-400)' : server.temp > 50 ? 'var(--amber-400)' : 'var(--text-muted)' }}>
-          {server.temp.toFixed(0)}°
-        </span>
-      </div>
-    </div>
   );
 }

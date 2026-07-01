@@ -181,6 +181,15 @@ export function buildBoxStyle(props: BoxOwnProps): CSSProperties {
     cursor,
   };
 
+  // React treats shorthand/longhand pairs (e.g. `gap` + `rowGap`/`columnGap`) as
+  // conflicting when both keys are present in the style object — even if the
+  // longhand value is `undefined` — and silently drops the shorthand. Since this
+  // object always declares every property key, strip the undefined ones so only
+  // the properties actually in use reach the DOM.
+  for (const key of Object.keys(style) as (keyof CSSProperties)[]) {
+    if (style[key] === undefined) delete style[key];
+  }
+
   return style;
 }
 

@@ -7,6 +7,7 @@ interface GlassPanelProps {
   className?: string;
   as?: ElementType;
   shimmerColor?: string;
+  shimmerOpacity?: number;
   style?: React.CSSProperties;
 }
 
@@ -15,12 +16,18 @@ export function GlassPanel({
   className,
   as: Tag = 'div',
   shimmerColor,
+  shimmerOpacity,
   style,
 }: GlassPanelProps) {
+  const shimmerVars = {
+    ...(shimmerColor ? { '--shimmer-color': shimmerColor } : null),
+    ...(shimmerOpacity !== undefined ? { '--shimmer-opacity': shimmerOpacity } : null),
+  } as React.CSSProperties;
+
   return (
     <Tag
       className={clsx('glass-panel', styles.panel, className)}
-      style={shimmerColor ? { '--shimmer-color': shimmerColor, ...style } as React.CSSProperties : style}
+      style={{ ...shimmerVars, ...style }}
     >
       {children}
     </Tag>

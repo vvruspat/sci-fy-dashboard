@@ -4,12 +4,16 @@ import {
   LayoutDashboard, Server, Globe, Cpu, Database, Shield,
   Settings, Bell, ChevronDown, ChevronRight, Wifi, AlertCircle,
 } from 'lucide-react';
+import { Box } from '../../atoms/layout/Box';
+import { Cluster } from '../../atoms/layout/Cluster';
 import { Indicator } from '../../atoms/feedback/Indicator';
 import { Badge } from '../../atoms/feedback/Badge';
+import { NavItem } from '../../atoms/feedback/NavItem';
 import { Avatar } from '../../atoms/data-display/Avatar';
-import styles from './Sidebar.module.css';
+import { LogoMark } from '../../atoms/typography/LogoMark';
+import { GlassSurface } from '../../atoms/surfaces/GlassSurface';
 
-interface NavItem {
+interface NavItemData {
   id: string;
   label: string;
   icon: React.ReactNode;
@@ -18,7 +22,7 @@ interface NavItem {
   children?: { id: string; label: string; status?: 'online' | 'offline' | 'warning'; }[];
 }
 
-const NAV: NavItem[] = [
+const NAV: NavItemData[] = [
   { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard size={15} /> },
   {
     id: 'servers', label: 'Servers', icon: <Server size={15} />, badge: 24,
@@ -47,10 +51,33 @@ export function Sidebar() {
   };
 
   return (
-    <aside className={styles.sidebar}>
+    <GlassSurface
+      as="aside"
+      edge="right"
+      edgeColor="var(--teal-700)"
+      edgeColorEnd="var(--teal-800)"
+      edgeOpacity={0.4}
+      display="flex"
+      direction="column"
+      width="var(--sidebar-width)"
+      height="100vh"
+      position="fixed"
+      top={0}
+      left={0}
+      zIndex={100}
+      overflow="hidden"
+      style={{ borderRight: '1px solid var(--border-dim)' }}
+    >
       {/* Logo */}
-      <div className={styles.logo}>
-        <div className={styles.logoIcon}>
+      <Cluster
+        gap={10}
+        paddingTop={16}
+        paddingX={16}
+        paddingBottom={12}
+        flexShrink={0}
+        style={{ borderBottom: '1px solid var(--border-dim)' }}
+      >
+        <LogoMark>
           <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="14" stroke="currentColor" strokeWidth="1.5" />
             <circle cx="16" cy="16" r="8" stroke="currentColor" strokeWidth="1" opacity="0.5" />
@@ -58,23 +85,49 @@ export function Sidebar() {
             <line x1="2" y1="16" x2="13" y2="16" stroke="currentColor" strokeWidth="1" />
             <line x1="19" y1="16" x2="30" y2="16" stroke="currentColor" strokeWidth="1" />
           </svg>
-        </div>
-        <div>
-          <div className={styles.logoName}>ORION</div>
-          <div className={styles.logoSub}>DATACENTER OS</div>
-        </div>
-      </div>
+        </LogoMark>
+        <Box>
+          <Box
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 13,
+              fontWeight: 800,
+              color: 'var(--teal-300)',
+              letterSpacing: '0.22em',
+              textShadow: '0 0 20px rgba(0,232,187,0.4)',
+            }}
+          >
+            ORION
+          </Box>
+          <Box
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 8,
+              color: 'var(--text-dim)',
+              letterSpacing: '0.14em',
+            }}
+          >
+            DATACENTER OS
+          </Box>
+        </Box>
+      </Cluster>
 
       {/* Status bar */}
-      <div className={styles.statusBar}>
+      <Cluster
+        justify="between"
+        paddingX={16}
+        paddingY={7}
+        flexShrink={0}
+        style={{ background: 'var(--bg-deep)', borderBottom: '1px solid var(--border-dim)' }}
+      >
         <Indicator status="online" label="All systems" size="sm" />
         <Badge variant="cyan">v4.2.1</Badge>
-      </div>
+      </Cluster>
 
       {/* Navigation */}
-      <nav className={styles.nav}>
-        <div className={styles.section}>
-          <span className={styles.sectionLabel}>Main</span>
+      <Box as="nav" flex={1} overflowY="auto" paddingY={6}>
+        <Box paddingY={6}>
+          <SectionLabel>Main</SectionLabel>
           {NAV.slice(0, 5).map(item => (
             <NavRow
               key={item.id}
@@ -85,9 +138,9 @@ export function Sidebar() {
               onToggle={toggleExpand}
             />
           ))}
-        </div>
-        <div className={styles.section}>
-          <span className={styles.sectionLabel}>Operations</span>
+        </Box>
+        <Box paddingY={6}>
+          <SectionLabel>Operations</SectionLabel>
           {NAV.slice(5).map(item => (
             <NavRow
               key={item.id}
@@ -98,34 +151,75 @@ export function Sidebar() {
               onToggle={toggleExpand}
             />
           ))}
-        </div>
-      </nav>
+        </Box>
+      </Box>
 
       {/* Bottom */}
-      <div className={styles.bottom}>
-        <button className={styles.bottomBtn}>
-          <Bell size={14} />
-          <span>Alerts</span>
+      <Box paddingY={6} flexShrink={0} style={{ borderTop: '1px solid var(--border-dim)' }}>
+        <NavItem icon={<Bell size={14} />} onClick={() => {}}>
+          Alerts
           <Badge variant="red">12</Badge>
-        </button>
-        <button className={styles.bottomBtn}>
-          <Settings size={14} />
-          <span>Settings</span>
-        </button>
-        <div className={styles.userCard}>
+        </NavItem>
+        <NavItem icon={<Settings size={14} />} onClick={() => {}}>
+          Settings
+        </NavItem>
+        <Cluster
+          gap={10}
+          paddingTop={10}
+          paddingX={16}
+          paddingBottom={6}
+          marginTop={4}
+          style={{ borderTop: '1px solid var(--border-dim)' }}
+        >
           <Avatar initials="BC" online size="md" />
-          <div className={styles.userInfo}>
-            <div className={styles.userName}>Bradley Cooper</div>
-            <div className={styles.userRole}>SysAdmin · Earth</div>
-          </div>
-        </div>
-      </div>
-    </aside>
+          <Box style={{ minWidth: 0 }}>
+            <Box
+              style={{
+                fontFamily: 'var(--font-body)',
+                fontSize: 11,
+                fontWeight: 600,
+                color: 'var(--text-secondary)',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
+              Bradley Cooper
+            </Box>
+            <Box style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--text-muted)' }}>
+              SysAdmin · Earth
+            </Box>
+          </Box>
+        </Cluster>
+      </Box>
+    </GlassSurface>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <Box
+      as="span"
+      display="block"
+      paddingTop={4}
+      paddingX={16}
+      paddingBottom={4}
+      marginBottom={1}
+      style={{
+        fontFamily: 'var(--font-mono)',
+        fontSize: 8,
+        color: 'var(--text-muted)',
+        letterSpacing: '0.18em',
+        textTransform: 'uppercase',
+      }}
+    >
+      {children}
+    </Box>
   );
 }
 
 interface NavRowProps {
-  item: NavItem;
+  item: NavItemData;
   active: string;
   expanded: string[];
   onSelect: (id: string) => void;
@@ -138,39 +232,50 @@ function NavRow({ item, active, expanded, onSelect, onToggle }: NavRowProps) {
 
   return (
     <>
-      <button
-        className={clsx(styles.navItem, isActive && styles.navActive)}
+      <NavItem
+        icon={item.icon}
+        active={isActive}
         onClick={() => {
           onSelect(item.id);
           if (item.children) onToggle(item.id);
         }}
+        trailing={
+          <>
+            {item.badge !== undefined && (
+              <Badge variant={item.badgeVariant ?? 'cyan'} className={clsx('nav-badge')}>
+                {item.badge}
+              </Badge>
+            )}
+            {item.children && (
+              <Box display="flex" align="center" style={{ color: 'var(--text-muted)' }}>
+                {isExpanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
+              </Box>
+            )}
+          </>
+        }
       >
-        <span className={styles.navIcon}>{item.icon}</span>
-        <span className={styles.navLabel}>{item.label}</span>
-        {item.badge !== undefined && (
-          <Badge variant={item.badgeVariant ?? 'cyan'} className={styles.navBadge}>
-            {item.badge}
-          </Badge>
-        )}
-        {item.children && (
-          <span className={styles.chevron}>
-            {isExpanded ? <ChevronDown size={11} /> : <ChevronRight size={11} />}
-          </span>
-        )}
-      </button>
+        {item.label}
+      </NavItem>
       {item.children && isExpanded && (
-        <div className={styles.subItems}>
+        <Box
+          paddingLeft={14}
+          marginTop={1}
+          marginBottom={2}
+          marginLeft={28}
+          style={{ borderLeft: '1px solid var(--border-dim)' }}
+        >
           {item.children.map(child => (
-            <button
+            <NavItem
               key={child.id}
-              className={clsx(styles.subItem, active === child.id && styles.navActive)}
+              variant="sub"
+              active={active === child.id}
               onClick={() => onSelect(child.id)}
             >
               {child.status && <Indicator status={child.status} size="sm" label="" />}
               <span>{child.label}</span>
-            </button>
+            </NavItem>
           ))}
-        </div>
+        </Box>
       )}
     </>
   );

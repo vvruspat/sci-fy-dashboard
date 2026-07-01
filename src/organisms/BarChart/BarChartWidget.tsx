@@ -4,8 +4,9 @@ import {
 } from 'recharts';
 import { WidgetPanel } from '../../molecules/WidgetPanel';
 import { ChartLegend } from '../../molecules/ChartLegend';
+import { ChartTooltip, ChartTooltipRow } from '../../atoms/data-display/ChartTooltip';
+import { Box } from '../../atoms/layout/Box';
 import { theme } from '../../theme';
-import styles from './BarChartWidget.module.css';
 
 const DATA = [
   { name: 'Rack A', load: 87, temp: 42 },
@@ -27,17 +28,18 @@ function getBarColor(value: number) {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload?.length) return null;
   return (
-    <div className={styles.tooltip}>
-      <div className={styles.tooltipTitle}>{label}</div>
+    <ChartTooltip heading={label} headingVariant="title">
       {payload.map((p: any) => (
-        <div key={p.dataKey} className={styles.tooltipRow}>
-          <span className={styles.tooltipKey}>{p.dataKey === 'load' ? 'CPU Load' : 'Temp'}</span>
-          <span className={styles.tooltipVal} style={{ color: p.fill }}>
-            {p.value}{p.dataKey === 'temp' ? '°C' : '%'}
-          </span>
-        </div>
+        <ChartTooltipRow
+          key={p.dataKey}
+          label={p.dataKey === 'load' ? 'CPU Load' : 'Temp'}
+          value={`${p.value}${p.dataKey === 'temp' ? '°C' : '%'}`}
+          valueColor={p.fill}
+          keyColor="var(--text-dim)"
+          gap={10}
+        />
       ))}
-    </div>
+    </ChartTooltip>
   );
 };
 
@@ -71,9 +73,8 @@ export function BarChartWidget({ title = 'Rack Load Distribution' }: BarChartWid
         { color: theme.warning,  label: 'High'     },
         { color: theme.danger,   label: 'Critical' },
       ]} />}
-      className={styles.widget}
     >
-      <div className={styles.chart}>
+      <Box height={200}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }} barCategoryGap="25%">
             <CartesianGrid strokeDasharray="1 8" stroke={theme.grid} horizontal vertical={false} />
@@ -98,7 +99,7 @@ export function BarChartWidget({ title = 'Rack Load Distribution' }: BarChartWid
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </div>
+      </Box>
     </WidgetPanel>
   );
 }

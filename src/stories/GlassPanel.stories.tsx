@@ -8,6 +8,7 @@ const meta: Meta<typeof GlassPanel> = {
   argTypes: {
     shimmerColor: { control: 'color' },
     as: { control: 'text' },
+    mode: { control: 'select', options: ['default', 'invisible'] },
   },
 };
 export default meta;
@@ -23,6 +24,13 @@ export const WithShimmer: Story = {
   args: {
     shimmerColor: 'var(--teal-400)',
     children: <div style={{ padding: '16px', color: 'var(--text-primary)' }}>Teal shimmer variant</div>,
+  },
+};
+
+export const Invisible: Story = {
+  args: {
+    mode: 'invisible',
+    children: <div style={{ padding: '16px', color: 'var(--text-primary)' }}>No background, border, or shimmer — just layout</div>,
   },
 };
 

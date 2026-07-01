@@ -8,6 +8,9 @@ const meta: Meta<typeof WidgetPanel> = {
   title: 'Molecules/WidgetPanel',
   component: WidgetPanel,
   tags: ['autodocs'],
+  argTypes: {
+    mode: { control: 'select', options: ['default', 'invisible'] },
+  },
 };
 export default meta;
 type Story = StoryObj<typeof WidgetPanel>;
@@ -59,6 +62,19 @@ export const WithBadgeActions: Story = {
     children: (
       <div style={{ padding: '16px', color: 'var(--text-dim)', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
         Alert list goes here
+      </div>
+    ),
+  },
+};
+
+export const Invisible: Story = {
+  args: {
+    title: 'Global Network',
+    subtitle: 'No background or border — just the layout shell',
+    mode: 'invisible',
+    children: (
+      <div style={{ padding: '16px', color: 'var(--text-dim)', fontSize: '12px', fontFamily: 'var(--font-mono)' }}>
+        Widget content area
       </div>
     ),
   },

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { GlassPanel } from '../atoms/GlassPanel';
+import { GlassPanel } from '../atoms/surfaces/GlassPanel';
 
 const meta: Meta<typeof GlassPanel> = {
   title: 'Atoms/GlassPanel',

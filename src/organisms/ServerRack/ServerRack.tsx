@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ProgressBar } from '../../atoms/ProgressBar';
-import { Indicator } from '../../atoms/Indicator';
-import { Badge } from '../../atoms/Badge';
+import { ProgressBar } from '../../atoms/feedback/ProgressBar';
+import { Indicator } from '../../atoms/feedback/Indicator';
+import { Badge } from '../../atoms/feedback/Badge';
 import { WidgetPanel } from '../../molecules/WidgetPanel';
 import styles from './ServerRack.module.css';
 

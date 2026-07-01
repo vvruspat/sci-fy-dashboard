@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Indicator } from '../atoms/Indicator';
+import { Indicator } from '../atoms/feedback/Indicator';
 
 const meta: Meta<typeof Indicator> = {
   title: 'Atoms/Indicator',

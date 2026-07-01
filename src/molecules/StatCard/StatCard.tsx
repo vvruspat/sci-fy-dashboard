@@ -1,9 +1,9 @@
 import { type ReactNode } from 'react';
 import { clsx } from 'clsx';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { Sparkline } from '../../atoms/Sparkline';
-import { Badge } from '../../atoms/Badge';
-import { GlassPanel } from '../../atoms/GlassPanel';
+import { Sparkline } from '../../atoms/data-display/Sparkline';
+import { Badge } from '../../atoms/feedback/Badge';
+import { GlassPanel } from '../../atoms/surfaces/GlassPanel';
 import styles from './StatCard.module.css';
 
 interface StatCardProps {

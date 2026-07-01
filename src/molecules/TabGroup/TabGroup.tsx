@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { clsx } from 'clsx';
-import { Badge } from '../../atoms/Badge';
+import { Badge } from '../../atoms/feedback/Badge';
 import styles from './TabGroup.module.css';
 
 interface Tab {

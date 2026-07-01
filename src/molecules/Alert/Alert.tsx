@@ -1,7 +1,7 @@
 import { type ReactNode } from 'react';
 import { clsx } from 'clsx';
 import { AlertTriangle, Info, CheckCircle, XCircle, X } from 'lucide-react';
-import { Button } from '../../atoms/Button';
+import { Button } from '../../atoms/form/Button';
 import styles from './Alert.module.css';
 
 export type AlertSeverity = 'info' | 'success' | 'warning' | 'critical';

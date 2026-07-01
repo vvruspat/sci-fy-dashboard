@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Search, Bell, RefreshCw, Clock, Wifi } from 'lucide-react';
-import { Input } from '../../atoms/Input';
-import { Badge } from '../../atoms/Badge';
-import { Button } from '../../atoms/Button';
-import { NotificationDot } from '../../atoms/NotificationDot';
+import { Input } from '../../atoms/form/Input';
+import { Badge } from '../../atoms/feedback/Badge';
+import { Button } from '../../atoms/form/Button';
+import { NotificationDot } from '../../atoms/feedback/NotificationDot';
 import styles from './TopBar.module.css';
 
 export function TopBar() {

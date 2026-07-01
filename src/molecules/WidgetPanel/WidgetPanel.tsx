@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react';
 import { clsx } from 'clsx';
-import { GlassPanel } from '../../atoms/GlassPanel';
-import { WidgetTitle } from '../../atoms/WidgetTitle';
-import { WidgetSubtitle } from '../../atoms/WidgetSubtitle';
+import { GlassPanel } from '../../atoms/surfaces/GlassPanel';
+import { WidgetTitle } from '../../atoms/typography/WidgetTitle';
+import { WidgetSubtitle } from '../../atoms/typography/WidgetSubtitle';
 import styles from './WidgetPanel.module.css';
 
 interface WidgetPanelProps {

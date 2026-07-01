@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Button } from '../atoms/Button';
+import { Button } from '../atoms/form/Button';
 import { Zap, Download, Shield, Trash2 } from 'lucide-react';
 
 const meta: Meta<typeof Button> = {

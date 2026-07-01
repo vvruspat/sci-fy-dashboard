@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { WidgetSubtitle } from '../atoms/WidgetSubtitle';
+import { WidgetSubtitle } from '../atoms/typography/WidgetSubtitle';
 
 const meta: Meta<typeof WidgetSubtitle> = {
   title: 'Atoms/WidgetSubtitle',

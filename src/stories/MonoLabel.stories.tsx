@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { MonoLabel } from '../atoms/MonoLabel';
+import { MonoLabel } from '../atoms/typography/MonoLabel';
 
 const meta: Meta<typeof MonoLabel> = {
   title: 'Atoms/MonoLabel',

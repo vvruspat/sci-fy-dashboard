@@ -4,9 +4,9 @@ import {
   LayoutDashboard, Server, Globe, Cpu, Database, Shield,
   Settings, Bell, ChevronDown, ChevronRight, Wifi, AlertCircle,
 } from 'lucide-react';
-import { Indicator } from '../../atoms/Indicator';
-import { Badge } from '../../atoms/Badge';
-import { Avatar } from '../../atoms/Avatar';
+import { Indicator } from '../../atoms/feedback/Indicator';
+import { Badge } from '../../atoms/feedback/Badge';
+import { Avatar } from '../../atoms/data-display/Avatar';
 import styles from './Sidebar.module.css';
 
 interface NavItem {

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { WidgetPanel } from '../molecules/WidgetPanel';
-import { Button } from '../atoms/Button';
-import { Badge } from '../atoms/Badge';
+import { Button } from '../atoms/form/Button';
+import { Badge } from '../atoms/feedback/Badge';
 import { RefreshCw } from 'lucide-react';
 
 const meta: Meta<typeof WidgetPanel> = {

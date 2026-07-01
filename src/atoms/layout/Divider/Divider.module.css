@@ -1,0 +1,4 @@
+.divider {
+  flex-shrink: 0;
+  pointer-events: none;
+}

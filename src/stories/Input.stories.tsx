@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Input } from '../atoms/Input';
+import { Input } from '../atoms/form/Input';
 import { Search, Server, Lock } from 'lucide-react';
 
 const meta: Meta<typeof Input> = {

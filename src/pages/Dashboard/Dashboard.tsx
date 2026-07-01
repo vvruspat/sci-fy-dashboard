@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Suspense, lazy } from 'react';
 import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
 import type { Layout, LayoutItem } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -13,8 +13,14 @@ import { PieChartWidget } from '../../organisms/PieChart';
 import { ServerRack } from '../../organisms/ServerRack';
 import { AlertsPanel } from '../../organisms/AlertsPanel';
 import { NetworkMap } from '../../organisms/NetworkMap';
-import { GlobeWidget } from '../../organisms/GlobeWidget';
+import { GlassPanel } from '../../atoms/surfaces/GlassPanel';
+import { Center } from '../../atoms/layout/Center';
+import { Spinner } from '../../atoms/feedback/Spinner';
 import styles from './Dashboard.module.css';
+
+// three.js pulls in a large bundle — deferred until this tile actually mounts,
+// instead of penalizing the initial dashboard load.
+const GlobeWidget = lazy(() => import('../../organisms/GlobeWidget').then(m => ({ default: m.GlobeWidget })));
 
 const STORAGE_KEY = 'orion-dashboard-layout-v1';
 
@@ -125,7 +131,11 @@ export function Dashboard() {
         <div key="networkMap"  className={styles.gridItem}><NetworkMap /></div>
         <div key="pieChart"    className={styles.gridItem}><PieChartWidget title="Resource Allocation" /></div>
         <div key="alertsPanel" className={styles.gridItem}><AlertsPanel /></div>
-        <div key="globe"       className={styles.gridItem}><GlobeWidget /></div>
+        <div key="globe"       className={styles.gridItem}>
+          <Suspense fallback={<GlassPanel style={{ height: '100%' }}><Center height="100%"><Spinner label="Loading globe…" /></Center></GlassPanel>}>
+            <GlobeWidget />
+          </Suspense>
+        </div>
       </Grid>
     </div>
   );

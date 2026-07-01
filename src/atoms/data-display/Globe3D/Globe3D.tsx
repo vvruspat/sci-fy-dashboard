@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useId, useMemo, useRef, useState, type PointerEvent } from 'react';
+import { useEffect, useRef } from 'react';
 import { clsx } from 'clsx';
-import { toUnitVector, rotate, project, slerp, scaleVec } from './geometry';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { latLngToVector3, makeGlowTexture, makeRingTexture, buildGraticule, buildContinents, buildArcPoints } from './sceneBuilders';
 import styles from './Globe3D.module.css';
 
 export type DatacenterStatus = 'online' | 'warning' | 'critical';
@@ -27,47 +29,28 @@ interface Globe3DProps {
   selectedId?: string | null;
   onSelect?: (id: string) => void;
   size?: number;
-  /** Degrees per second while idle (not being dragged). */
+  /** OrbitControls autoRotateSpeed — roughly one full turn per (60 / speed) seconds. */
   autoRotateSpeed?: number;
   className?: string;
 }
 
+const RADIUS = 100;
+
 const STATUS_COLOR: Record<DatacenterStatus, string> = {
-  online: 'var(--teal-300)',
-  warning: 'var(--amber-400)',
-  critical: 'var(--red-500)',
+  online: 'hsl(185, 100%, 43%)',
+  warning: 'hsl(30, 80%, 69%)',
+  critical: 'hsl(352, 100%, 62%)',
 };
 
 const LINK_COLOR: Record<GlobeLinkStatus, string> = {
-  active: 'var(--teal-400)',
-  degraded: 'var(--amber-400)',
+  active: 'hsl(185, 100%, 55%)',
+  degraded: 'hsl(30, 80%, 69%)',
 };
 
-const MERIDIANS = [0, 45, 90, 135, 180, 225, 270, 315];
-const PARALLELS = [-60, -30, 0, 30, 60];
-const GRATICULE_STEP = 10;
-const LINK_STEPS = 16;
-const LINK_SEGMENTS = 4;
-const RESUME_DELAY_MS = 1200;
-
-const GRATICULE_LINES: [number, number][][] = [
-  ...MERIDIANS.map((lng) => {
-    const points: [number, number][] = [];
-    for (let lat = -90; lat <= 90; lat += GRATICULE_STEP) points.push([lat, lng]);
-    return points;
-  }),
-  ...PARALLELS.map((lat) => {
-    const points: [number, number][] = [];
-    for (let lng = -180; lng <= 180; lng += GRATICULE_STEP) points.push([lat, lng]);
-    return points;
-  }),
-];
-
 /**
- * Lightweight rotating 3D globe rendered as SVG (orthographic projection, no WebGL
- * dependency). Auto-rotates when idle; drag with pointer to spin manually. Datacenters
- * are unit-sphere markers, links are elevated great-circle arcs faded by depth so the
- * globe reads as a translucent hologram rather than an opaque sphere.
+ * Rotating WebGL Earth (three.js) with glowing continent outlines pulled from a bundled
+ * world atlas, datacenter markers, and elevated great-circle connection arcs. Auto-rotates
+ * via OrbitControls when idle; drag to spin manually, click a marker to select it.
  */
 export function Globe3D({
   datacenters,
@@ -75,188 +58,213 @@ export function Globe3D({
   selectedId,
   onSelect,
   size = 280,
-  autoRotateSpeed = 6,
+  autoRotateSpeed = 3.5,
   className,
 }: Globe3DProps) {
-  const uid = useId();
-  const glowFilterId = `globe-glow-${uid}`;
-  const atmosphereId = `globe-atmosphere-${uid}`;
-
-  const [yaw, setYaw] = useState(0.6);
-  const [pitch, setPitch] = useState(-0.25);
-  const [dragging, setDragging] = useState(false);
-
-  const dragRef = useRef<{ x: number; y: number; yaw: number; pitch: number } | null>(null);
-  const lastInteractionRef = useRef(0);
-  const frameRef = useRef(0);
-  const lastFrameTimeRef = useRef(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const onSelectRef = useRef(onSelect);
+  onSelectRef.current = onSelect;
+  const ringByIdRef = useRef(new Map<string, THREE.Sprite>());
 
   useEffect(() => {
-    function tick(t: number) {
-      if (!lastFrameTimeRef.current) lastFrameTimeRef.current = t;
-      const dt = (t - lastFrameTimeRef.current) / 1000;
-      lastFrameTimeRef.current = t;
+    const container = containerRef.current;
+    if (!container) return;
 
-      const idleFor = t - lastInteractionRef.current;
-      if (!dragRef.current && idleFor > RESUME_DELAY_MS) {
-        setYaw((y) => y + (autoRotateSpeed * Math.PI) / 180 * dt);
-      }
-      frameRef.current = requestAnimationFrame(tick);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 1, 2000);
+    camera.position.set(0, 0, 300);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(new THREE.Color('hsl(185, 60%, 25%)'), 1.2));
+    const sun = new THREE.DirectionalLight(new THREE.Color('hsl(185, 60%, 85%)'), 1.5);
+    sun.position.set(120, 90, 160);
+    scene.add(sun);
+
+    const sphere = new THREE.Mesh(
+      new THREE.SphereGeometry(RADIUS * 0.985, 64, 64),
+      new THREE.MeshPhongMaterial({
+        color: new THREE.Color('hsl(185, 70%, 5%)'),
+        emissive: new THREE.Color('hsl(185, 60%, 3%)'),
+        shininess: 12,
+        transparent: true,
+        opacity: 0.94,
+      }),
+    );
+    scene.add(sphere);
+
+    const atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(RADIUS * 1.06, 48, 48),
+      new THREE.MeshBasicMaterial({
+        color: new THREE.Color('hsl(185, 100%, 55%)'),
+        transparent: true,
+        opacity: 0.06,
+        side: THREE.BackSide,
+      }),
+    );
+    scene.add(atmosphere);
+
+    const graticule = buildGraticule(RADIUS, 'hsl(185, 74%, 22%)');
+    scene.add(graticule);
+
+    const continents = buildContinents(RADIUS * 1.001, 'hsl(185, 100%, 55%)');
+    scene.add(continents);
+
+    const glowTexture = makeGlowTexture();
+    const ringTexture = makeRingTexture();
+    ringByIdRef.current.clear();
+    const clickableIds: string[] = [];
+    const clickableObjects: THREE.Object3D[] = [];
+
+    const markerGroup = new THREE.Group();
+    for (const dc of datacenters) {
+      const group = new THREE.Group();
+      group.position.copy(latLngToVector3(dc.lat, dc.lng, RADIUS * 1.01));
+
+      const color = new THREE.Color(STATUS_COLOR[dc.status]);
+
+      const glow = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: glowTexture, color, transparent: true, opacity: 0.55, depthWrite: false,
+      }));
+      glow.scale.setScalar(14);
+      group.add(glow);
+
+      const dot = new THREE.Mesh(
+        new THREE.SphereGeometry(2.4, 16, 16),
+        new THREE.MeshBasicMaterial({ color }),
+      );
+      group.add(dot);
+
+      const ring = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: ringTexture, color, transparent: true, opacity: 0.9, depthWrite: false,
+      }));
+      ring.scale.setScalar(11);
+      ring.visible = dc.id === selectedId;
+      group.add(ring);
+
+      markerGroup.add(group);
+      ringByIdRef.current.set(dc.id, ring);
+      clickableIds.push(dc.id);
+      clickableObjects.push(dot);
     }
-    frameRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frameRef.current);
-  }, [autoRotateSpeed]);
+    scene.add(markerGroup);
 
-  const handlePointerDown = useCallback((e: PointerEvent<SVGSVGElement>) => {
-    e.currentTarget.setPointerCapture(e.pointerId);
-    dragRef.current = { x: e.clientX, y: e.clientY, yaw, pitch };
-    lastInteractionRef.current = performance.now();
-    setDragging(true);
-  }, [yaw, pitch]);
-
-  const handlePointerMove = useCallback((e: PointerEvent<SVGSVGElement>) => {
-    if (!dragRef.current) return;
-    const dx = e.clientX - dragRef.current.x;
-    const dy = e.clientY - dragRef.current.y;
-    setYaw(dragRef.current.yaw + dx * 0.008);
-    setPitch(Math.max(-1.3, Math.min(1.3, dragRef.current.pitch - dy * 0.008)));
-    lastInteractionRef.current = performance.now();
-  }, []);
-
-  const handlePointerUp = useCallback((e: PointerEvent<SVGSVGElement>) => {
-    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    }
-    dragRef.current = null;
-    lastInteractionRef.current = performance.now();
-    setDragging(false);
-  }, []);
-
-  const radius = size / 2 - 20;
-
-  const projectedDatacenters = useMemo(
-    () => datacenters.map((dc) => ({
-      dc,
-      ...project(rotate(toUnitVector(dc.lat, dc.lng), yaw, pitch), radius),
-    })),
-    [datacenters, yaw, pitch, radius],
-  );
-
-  const datacenterById = useMemo(
-    () => new Map(datacenters.map((d) => [d.id, d])),
-    [datacenters],
-  );
-
-  const projectedLinks = useMemo(() => {
-    return links.flatMap((link) => {
+    const datacenterById = new Map(datacenters.map((d) => [d.id, d]));
+    const linkGroup = new THREE.Group();
+    for (const link of links) {
       const from = datacenterById.get(link.from);
       const to = datacenterById.get(link.to);
-      if (!from || !to) return [];
+      if (!from || !to) continue;
+      const a = latLngToVector3(from.lat, from.lng, RADIUS);
+      const b = latLngToVector3(to.lat, to.lng, RADIUS);
+      const geometry = new THREE.BufferGeometry().setFromPoints(buildArcPoints(a, b, RADIUS));
+      const material = new THREE.LineBasicMaterial({
+        color: new THREE.Color(LINK_COLOR[link.status]),
+        transparent: true,
+        opacity: 0.75,
+      });
+      linkGroup.add(new THREE.Line(geometry, material));
+    }
+    scene.add(linkGroup);
 
-      const a = toUnitVector(from.lat, from.lng);
-      const b = toUnitVector(to.lat, to.lng);
-      const pointsPerSegment = LINK_STEPS / LINK_SEGMENTS;
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.enablePan = false;
+    controls.enableZoom = false;
+    controls.autoRotate = true;
+    controls.autoRotateSpeed = autoRotateSpeed;
+    controls.minPolarAngle = Math.PI * 0.18;
+    controls.maxPolarAngle = Math.PI * 0.82;
 
-      const segments: { key: string; d: string; opacity: number }[] = [];
-      let path: string[] = [];
-      let visibleSum = 0;
-      let visibleCount = 0;
+    const raycaster = new THREE.Raycaster();
+    const pointerNdc = new THREE.Vector2();
+    let pointerDownAt: { x: number; y: number } | null = null;
 
-      for (let i = 0; i <= LINK_STEPS; i++) {
-        const t = i / LINK_STEPS;
-        const bulge = 1 + Math.sin(t * Math.PI) * 0.18;
-        const point = rotate(scaleVec(slerp(a, b, t), bulge), yaw, pitch);
-        const p = project(point, radius);
-        path.push(`${path.length === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`);
-        visibleSum += p.visible;
-        visibleCount++;
+    function handlePointerDown(e: PointerEvent) {
+      pointerDownAt = { x: e.clientX, y: e.clientY };
+      container?.classList.add(styles.dragging);
+    }
+    function handlePointerUp(e: PointerEvent) {
+      container?.classList.remove(styles.dragging);
+      if (!pointerDownAt) return;
+      const moved = Math.hypot(e.clientX - pointerDownAt.x, e.clientY - pointerDownAt.y);
+      pointerDownAt = null;
+      if (moved > 4) return;
 
-        if (path.length > pointsPerSegment || i === LINK_STEPS) {
-          segments.push({
-            key: `${link.id}-${segments.length}`,
-            d: path.join(' '),
-            opacity: visibleSum / visibleCount,
-          });
-          path = [`M${p.x.toFixed(1)},${p.y.toFixed(1)}`];
-          visibleSum = 0;
-          visibleCount = 0;
-        }
+      const rect = renderer.domElement.getBoundingClientRect();
+      pointerNdc.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      pointerNdc.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+      raycaster.setFromCamera(pointerNdc, camera);
+      const hit = raycaster.intersectObjects(clickableObjects)[0];
+      if (hit) {
+        const index = clickableObjects.indexOf(hit.object);
+        if (index !== -1) onSelectRef.current?.(clickableIds[index]);
       }
-      return segments.map((seg) => ({ ...seg, status: link.status }));
-    });
-  }, [links, datacenterById, yaw, pitch, radius]);
+    }
+    renderer.domElement.addEventListener('pointerdown', handlePointerDown);
+    renderer.domElement.addEventListener('pointerup', handlePointerUp);
 
-  const graticulePaths = useMemo(
-    () => GRATICULE_LINES.map((points) => points
-      .map(([lat, lng], i) => {
-        const p = project(rotate(toUnitVector(lat, lng), yaw, pitch), radius);
-        return `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`;
-      })
-      .join(' ')),
-    [yaw, pitch, radius],
-  );
+    function resize() {
+      const w = container!.clientWidth || size;
+      const h = container!.clientHeight || size;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(container);
+
+    let frameId = 0;
+    function animate() {
+      controls.update();
+      renderer.render(scene, camera);
+      frameId = requestAnimationFrame(animate);
+    }
+    animate();
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      resizeObserver.disconnect();
+      renderer.domElement.removeEventListener('pointerdown', handlePointerDown);
+      renderer.domElement.removeEventListener('pointerup', handlePointerUp);
+      controls.dispose();
+      renderer.dispose();
+      glowTexture.dispose();
+      ringTexture.dispose();
+      scene.traverse((obj) => {
+        if (obj instanceof THREE.Mesh || obj instanceof THREE.Line) {
+          obj.geometry.dispose();
+          const material = obj.material;
+          if (Array.isArray(material)) material.forEach((m) => m.dispose());
+          else material.dispose();
+        } else if (obj instanceof THREE.Sprite) {
+          obj.material.dispose();
+        }
+      });
+      if (renderer.domElement.parentElement === container) {
+        container.removeChild(renderer.domElement);
+      }
+    };
+    // Rebuilding the whole scene on every selection change would be wasteful — that's
+    // handled by the effect below instead.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [datacenters, links, autoRotateSpeed, size]);
+
+  useEffect(() => {
+    for (const [id, ring] of ringByIdRef.current) {
+      ring.visible = id === selectedId;
+    }
+  }, [selectedId]);
 
   return (
-    <svg
-      viewBox={`${-size / 2} ${-size / 2} ${size} ${size}`}
-      width={size}
-      height={size}
-      className={clsx(styles.globe, dragging && styles.dragging, className)}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
-    >
-      <defs>
-        <radialGradient id={atmosphereId} cx="50%" cy="50%" r="50%">
-          <stop offset="65%" stopColor="var(--teal-400)" stopOpacity="0" />
-          <stop offset="100%" stopColor="var(--teal-400)" stopOpacity="0.22" />
-        </radialGradient>
-        <filter id={glowFilterId} x="-150%" y="-150%" width="400%" height="400%">
-          <feGaussianBlur stdDeviation="2" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
-      <circle r={radius + 8} fill={`url(#${atmosphereId})`} />
-      <circle r={radius} className={styles.sphere} />
-
-      <g className={styles.grid}>
-        {graticulePaths.map((d, i) => <path key={i} d={d} />)}
-      </g>
-
-      <g>
-        {projectedLinks.map((seg) => (
-          <path
-            key={seg.key}
-            d={seg.d}
-            stroke={LINK_COLOR[seg.status]}
-            strokeOpacity={seg.opacity}
-            className={styles.link}
-          />
-        ))}
-      </g>
-
-      <g>
-        {projectedDatacenters.map(({ dc, x, y, visible, scale }) => (
-          <g
-            key={dc.id}
-            transform={`translate(${x.toFixed(1)}, ${y.toFixed(1)})`}
-            opacity={visible}
-            className={styles.marker}
-            onPointerDown={(e) => e.stopPropagation()}
-            onClick={() => onSelect?.(dc.id)}
-          >
-            {dc.id === selectedId && (
-              <circle r={7 * scale} className={styles.markerRing} stroke={STATUS_COLOR[dc.status]} />
-            )}
-            <circle r={3.5 * scale} fill={STATUS_COLOR[dc.status]} filter={`url(#${glowFilterId})`} />
-          </g>
-        ))}
-      </g>
-    </svg>
+    <div
+      ref={containerRef}
+      className={clsx(styles.globe, className)}
+      style={{ width: size, height: size }}
+    />
   );
 }

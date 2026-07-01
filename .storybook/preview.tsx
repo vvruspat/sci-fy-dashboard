@@ -1,14 +1,15 @@
 import type { Preview } from '@storybook/react-vite';
 import '../src/index.css';
+import theme from './theme';
 
 const preview: Preview = {
   parameters: {
     backgrounds: {
       default: 'void',
       values: [
-        { name: 'void', value: '#030712' },
-        { name: 'deep', value: '#050a18' },
-        { name: 'panel', value: '#0a1228' },
+        { name: 'void', value: 'hsl(185, 88%, 3%)' },
+        { name: 'deep', value: 'hsl(185, 88%, 4.5%)' },
+        { name: 'panel', value: 'hsl(185, 82%, 6%)' },
       ],
     },
     controls: {
@@ -18,6 +19,9 @@ const preview: Preview = {
       },
     },
     layout: 'centered',
+    docs: {
+      theme,
+    },
   },
   decorators: [
     (Story) => (

@@ -2,6 +2,8 @@ import { type ReactNode, type ElementType } from 'react';
 import { clsx } from 'clsx';
 import styles from './GlassPanel.module.css';
 
+export type GlassPanelMode = 'default' | 'invisible';
+
 interface GlassPanelProps {
   children?: ReactNode;
   className?: string;
@@ -9,6 +11,8 @@ interface GlassPanelProps {
   shimmerColor?: string;
   shimmerOpacity?: number;
   style?: React.CSSProperties;
+  /** 'invisible' drops the background, border, and shimmer line — just a layout shell. */
+  mode?: GlassPanelMode;
 }
 
 export function GlassPanel({
@@ -18,6 +22,7 @@ export function GlassPanel({
   shimmerColor,
   shimmerOpacity,
   style,
+  mode = 'default',
 }: GlassPanelProps) {
   const shimmerVars = {
     ...(shimmerColor ? { '--shimmer-color': shimmerColor } : null),
@@ -26,7 +31,7 @@ export function GlassPanel({
 
   return (
     <Tag
-      className={clsx('glass-panel', styles.panel, className)}
+      className={clsx('glass-panel', styles.panel, mode === 'invisible' && styles.invisible, className)}
       style={{ ...shimmerVars, ...style }}
     >
       {children}

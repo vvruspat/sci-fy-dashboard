@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { GlassPanel } from '../../atoms/surfaces/GlassPanel';
+import { GlassPanel, type GlassPanelMode } from '../../atoms/surfaces/GlassPanel';
 import { WidgetTitle } from '../../atoms/typography/WidgetTitle';
 import { WidgetSubtitle } from '../../atoms/typography/WidgetSubtitle';
 import { Stack } from '../../atoms/layout/Stack';
@@ -16,13 +16,16 @@ interface WidgetPanelProps {
   gap?: number;
   /** Top accent-line color, forwarded to GlassPanel. */
   shimmerColor?: string;
+  /** 'invisible' drops the panel's background/border/shimmer — just a layout shell. */
+  mode?: GlassPanelMode;
 }
 
-export function WidgetPanel({ title, subtitle, actions, children, className, gap = 12, shimmerColor }: WidgetPanelProps) {
+export function WidgetPanel({ title, subtitle, actions, children, className, gap = 12, shimmerColor, mode }: WidgetPanelProps) {
   return (
     <GlassPanel
       className={className}
       shimmerColor={shimmerColor}
+      mode={mode}
       style={buildBoxStyle({ display: 'flex', direction: 'column', gap, padding: 20, height: '100%' })}
     >
       <Cluster className="drag-handle" align="start" justify="between" gap={12}>

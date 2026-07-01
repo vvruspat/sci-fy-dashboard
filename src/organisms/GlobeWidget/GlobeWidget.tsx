@@ -60,6 +60,7 @@ export function GlobeWidget() {
       title="Global Network"
       subtitle="Datacenter topology & connections"
       actions={<Badge variant="cyan" dot>{onlineCount}/{DATACENTERS.length} Sites</Badge>}
+      mode="invisible"
     >
       <Cluster align="start" gap={20} wrap="nowrap">
         <Box flexShrink={0}>

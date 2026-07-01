@@ -5,6 +5,14 @@
   overflow: hidden;
 }
 
+.invisible {
+  background: transparent;
+  border-color: transparent;
+}
+.invisible::before {
+  content: none;
+}
+
 /* Top shimmer accent line */
 .panel::before {
   content: '';

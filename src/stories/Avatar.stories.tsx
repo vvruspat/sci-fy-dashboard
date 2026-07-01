@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Avatar } from '../atoms/data-display/Avatar';
 
 const meta: Meta<typeof Avatar> = {
-  title: 'Atoms/Avatar',
+  title: 'Atoms/Data Display/Avatar',
   component: Avatar,
   tags: ['autodocs'],
   argTypes: {

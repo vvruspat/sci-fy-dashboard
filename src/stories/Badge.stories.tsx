@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Badge } from '../atoms/feedback/Badge';
 
 const meta: Meta<typeof Badge> = {
-  title: 'Atoms/Badge',
+  title: 'Atoms/Feedback/Badge',
   component: Badge,
   tags: ['autodocs'],
   argTypes: {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Sparkline } from '../atoms/data-display/Sparkline';
 
 const meta: Meta<typeof Sparkline> = {
-  title: 'Atoms/Sparkline',
+  title: 'Atoms/Data Display/Sparkline',
   component: Sparkline,
   tags: ['autodocs'],
   argTypes: {

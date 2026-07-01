@@ -3,7 +3,7 @@ import { Input } from '../atoms/form/Input';
 import { Search, Server, Lock } from 'lucide-react';
 
 const meta: Meta<typeof Input> = {
-  title: 'Atoms/Input',
+  title: 'Atoms/Form/Input',
   component: Input,
   tags: ['autodocs'],
 };

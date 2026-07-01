@@ -3,7 +3,7 @@ import { Button } from '../atoms/form/Button';
 import { Zap, Download, Shield, Trash2 } from 'lucide-react';
 
 const meta: Meta<typeof Button> = {
-  title: 'Atoms/Button',
+  title: 'Atoms/Form/Button',
   component: Button,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],

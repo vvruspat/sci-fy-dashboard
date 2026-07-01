@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { GlassPanel } from '../atoms/surfaces/GlassPanel';
 
 const meta: Meta<typeof GlassPanel> = {
-  title: 'Atoms/GlassPanel',
+  title: 'Atoms/Surfaces/GlassPanel',
   component: GlassPanel,
   tags: ['autodocs'],
   argTypes: {

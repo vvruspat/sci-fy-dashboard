@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { WidgetTitle } from '../atoms/typography/WidgetTitle';
 
 const meta: Meta<typeof WidgetTitle> = {
-  title: 'Atoms/WidgetTitle',
+  title: 'Atoms/Typography/WidgetTitle',
   component: WidgetTitle,
   tags: ['autodocs'],
   argTypes: {

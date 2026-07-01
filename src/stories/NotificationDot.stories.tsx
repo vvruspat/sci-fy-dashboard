@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { NotificationDot } from '../atoms/feedback/NotificationDot';
 
 const meta: Meta<typeof NotificationDot> = {
-  title: 'Atoms/NotificationDot',
+  title: 'Atoms/Feedback/NotificationDot',
   component: NotificationDot,
   tags: ['autodocs'],
   argTypes: {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { MonoLabel } from '../atoms/typography/MonoLabel';
 
 const meta: Meta<typeof MonoLabel> = {
-  title: 'Atoms/MonoLabel',
+  title: 'Atoms/Typography/MonoLabel',
   component: MonoLabel,
   tags: ['autodocs'],
   argTypes: {
